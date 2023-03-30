@@ -11,30 +11,31 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Logger;
 
 public class Main {
+	private static final Logger logger = (Logger) LoggerFactory.getLogger(Main.class);
+
 	public static void main(String args[]) throws Exception {
 		final Options options = options();
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);
 
+		out.println("cmcc-cint3 v0.0.1 by Wangxy <xtwxy@hotmail.com>.\n"
+				+ "Copyright (c) 2021-2023 WINCOM.\n"
+				+ "Copyright (c) 2021-2023 Wangxy <xtwxy@hotmail.com>\n"
+				+ "All rights reserved.");
 		if (cmd.hasOption("h")) {
 			printHelp(options);
 		} else {
 			final Map<String, String> params = defaultOptions();
 
-			options.getOptions().stream().forEach(o -> {
-				if (cmd.hasOption(o.getLongOpt())) {
-					System.out.printf("--%s=%s\n", o.getLongOpt(), cmd.getOptionValue(o.getLongOpt()));
-					params.put(o.getLongOpt(), o.hasArg() ? cmd.getOptionValue(o.getLongOpt()) : "true");
-				} else {
-					System.out.printf("%s - default\n", paddingRight(String.format("--%s=%s", o.getLongOpt(), params.get(o.getLongOpt())), 24));
-				}
-			});
+			extractCommandOptions(options, cmd, params);
 
 			if (!cmd.getArgList().isEmpty()) {
-				printOptions(params);
 				for (String arg : cmd.getArgList()) {
 					if ("server".equalsIgnoreCase(arg)) {
 						Server.launch(params);
@@ -49,9 +50,9 @@ public class Main {
 					} else if ("time-check".equalsIgnoreCase(arg)) {
 						TimeCheck.launch(params);
 					} else if ("pseudo-csc".equalsIgnoreCase(arg)) {
-						out.printf("// TODO: perform %s task.\n", arg);
+						logger.info("// TODO: perform %s task.", arg);
 					} else {
-						out.printf("// TODO: unsupported '%s' task.\n", arg);
+						logger.info("// TODO: unsupported '%s' task.", arg);
 						// TODO: perform task.
 					}
 				}
@@ -59,20 +60,6 @@ public class Main {
 				printHelp(options);
 			}
 		}
-	}
-
-	private static void printHelp(final Options options) {
-		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("re-send-alarm <options> <command>,\n"
-				+ "where command = server,\n"
-				+ "                dyn-access,\n"
-				+ "                alarm-mode,\n"
-				+ "                modify-passwd,\n"
-				+ "                set-point,\n"
-				+ "                time-check,\n"
-				+ "                pseudo-csc.\n"
-				+ "and available options are:"
-				, options);
 	}
 
 	public static Map<String, String> defaultOptions() {
@@ -84,7 +71,7 @@ public class Main {
 				put("server-port", "8110");
 				put("server-user", "user");
 				put("server-passwd", "1234");
-				put("server-new-passwd", "1234");
+				put("server-new-passwd", "1234567890");
 				put("alarm-mode", "4");
 				put("dyn-access-mode", "0");
 				put("polling-time", "2");
@@ -97,25 +84,6 @@ public class Main {
 				put("mq-pass", "guest");
 			}
 		};
-	}
-
-	public static void printOptions(Map<String, String> options) {
-		out.println("current options are:");
-		final int maxLength = options.entrySet().stream().map(x -> x.getKey().length()).max(Integer::compare).get() + 1;
-
-		options.entrySet().forEach(e -> out.printf("  --%s = %s\n", paddingRight(e.getKey(), maxLength), e.getValue()));
-	}
-
-	public static String paddingRight(String s, int maxWidth) {
-		int length = s.length();
-		StringBuilder sb = new StringBuilder();
-		sb.append(s);
-		if (length < maxWidth) {
-			for (int i = length; i < maxWidth; ++i) {
-				sb.append(' ');
-			}
-		}
-		return sb.toString();
 	}
 
 	public static Options options() {
@@ -138,5 +106,64 @@ public class Main {
 		options.addOption(new Option(null, "mq-pass", true, "message broker password"));
 		options.addOption(new Option("h", "help", false, "print help message"));
 		return options;
+	}
+
+	private static void extractCommandOptions(final Options options, CommandLine cmd,
+			final Map<String, String> params) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("current options are:\n");
+		final int maxKeyLength = options.getOptions()
+			.stream()
+			.map(x -> x.getLongOpt().length())
+			.max(Integer::compare)
+			.get();
+		final int maxLength = options.getOptions()
+			.stream()
+			.map(o -> 
+				cmd.hasOption(o.getLongOpt()) 
+					? String.format("  --%s = %s", paddingRight(o.getLongOpt(), maxKeyLength), o.hasArg() ? cmd.getOptionValue(o.getLongOpt()) : "true")
+					: String.format("  --%s = %s", paddingRight(o.getLongOpt(), maxKeyLength), params.get(o.getLongOpt()) == null ? "false" : params.get(o.getLongOpt()))			
+					)
+			.map(s -> s.length())
+			.max(Integer::compare)
+			.get() + 1;
+		
+		options.getOptions().stream().forEach(o -> {
+			if (cmd.hasOption(o.getLongOpt())) {
+				String value = o.hasArg() ? cmd.getOptionValue(o.getLongOpt()) : "true";
+				sb.append(String.format("  --%s = %s\n", paddingRight(o.getLongOpt(), maxKeyLength), value));
+				params.put(o.getLongOpt(), value);
+			} else {
+				String value = params.get(o.getLongOpt()) == null ? "false" : params.get(o.getLongOpt());
+				sb.append(String.format("%s - default\n", paddingRight(String.format("  --%s = %s", paddingRight(o.getLongOpt(), maxKeyLength), value), maxLength)));
+			}
+		});
+		logger.info(sb.toString());
+	}
+
+	private static void printHelp(final Options options) {
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printHelp("cmcc-cint3-nfjd <options> <command>,\n"
+				+ "where command = server,\n"
+				+ "                dyn-access,\n"
+				+ "                alarm-mode,\n"
+				+ "                modify-passwd,\n"
+				+ "                set-point,\n"
+				+ "                time-check,\n"
+				+ "                pseudo-csc,\n"
+				+ "and available options are:"
+				, options);
+	}
+
+	private static String paddingRight(String s, int maxWidth) {
+		int length = s.length();
+		StringBuilder sb = new StringBuilder();
+		sb.append(s);
+		if (length < maxWidth) {
+			for (int i = length; i < maxWidth; ++i) {
+				sb.append(' ');
+			}
+		}
+		return sb.toString();
 	}
 }
