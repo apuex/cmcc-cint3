@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.github.apuex.cmcc-cint3</groupId>
+	<artifactId>cmcc-cint3</artifactId>
+	<version>0.0.1</version>
+	<packaging>pom</packaging>
+
+	<name>cmcc-cint3</name>
+	<description>CMCC C Interface 3.5.1</description>
+	<url>https://github.com/apuex/cmcc-cint3</url>
+
+	<parent>
+		<groupId>com.github.apuex</groupId>
+		<artifactId>apuex-parent</artifactId>
+		<version>1.0.2</version>
+	</parent>
+
+	<modules>
+		<module>message</module>
+		<module>util</module>
+	</modules>
+
+	<properties>
+		<commons-cli.version>1.4.0</commons-cli.version>
+	</properties>
+
+</project>
+
+       
