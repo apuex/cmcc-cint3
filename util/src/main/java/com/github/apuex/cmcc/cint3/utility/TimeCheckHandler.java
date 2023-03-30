@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.apuex.cmcc.cint3.HeartBeatAck;
 import com.github.apuex.cmcc.cint3.Login;
+import com.github.apuex.cmcc.cint3.Logout;
 import com.github.apuex.cmcc.cint3.Message;
 import com.github.apuex.cmcc.cint3.TTime;
 import com.github.apuex.cmcc.cint3.TimeCheck;
@@ -51,6 +52,7 @@ public class TimeCheckHandler extends io.netty.channel.ChannelInboundHandlerAdap
 			case LOGOUT:
 				break;
 			case LOGOUT_ACK:
+				ctx.close();
 				break;
 			case SET_DYN_ACCESS_MODE:
 				break;
@@ -80,7 +82,7 @@ public class TimeCheckHandler extends io.netty.channel.ChannelInboundHandlerAdap
 			case TIME_CHECK:
 				break;
 			case TIME_CHECK_ACK:
-				ctx.close();
+				send(ctx, new Logout(++serialNo));
 				break;
 			case NOTIFY_PROPERTY_MODIFY:
 				break;

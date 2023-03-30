@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.apuex.cmcc.cint3.HeartBeatAck;
 import com.github.apuex.cmcc.cint3.Login;
+import com.github.apuex.cmcc.cint3.Logout;
 import com.github.apuex.cmcc.cint3.Message;
 import com.github.apuex.cmcc.cint3.ModifyPassword;
 
@@ -46,6 +47,7 @@ public class ModifyPasswdHandler extends io.netty.channel.ChannelInboundHandlerA
 			case LOGOUT:
 				break;
 			case LOGOUT_ACK:
+				ctx.close();
 				break;
 			case SET_DYN_ACCESS_MODE:
 				break;
@@ -66,7 +68,7 @@ public class ModifyPasswdHandler extends io.netty.channel.ChannelInboundHandlerA
 			case REQ_MODIFY_PASSWORD:
 				break;
 			case MODIFY_PASSWORD_ACK:
-				ctx.close();
+				send(ctx, new Logout(++serialNo));
 				break;
 			case HEART_BEAT:
 				send(ctx, new HeartBeatAck(message.SerialNo));

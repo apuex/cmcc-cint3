@@ -9,6 +9,7 @@ import com.github.apuex.cmcc.cint3.EnumState;
 import com.github.apuex.cmcc.cint3.EnumType;
 import com.github.apuex.cmcc.cint3.HeartBeatAck;
 import com.github.apuex.cmcc.cint3.Login;
+import com.github.apuex.cmcc.cint3.Logout;
 import com.github.apuex.cmcc.cint3.Message;
 import com.github.apuex.cmcc.cint3.SetPoint;
 import com.github.apuex.cmcc.cint3.TA;
@@ -52,11 +53,11 @@ public class SetPointHandler extends io.netty.channel.ChannelInboundHandlerAdapt
 			case LOGOUT:
 				break;
 			case LOGOUT_ACK:
+				ctx.close();
 				break;
 			case SET_DYN_ACCESS_MODE:
 				break;
 			case DYN_ACCESS_MODE_ACK:
-				ctx.close();
 				break;
 			case SET_ALARM_MODE:
 				break;
@@ -69,7 +70,7 @@ public class SetPointHandler extends io.netty.channel.ChannelInboundHandlerAdapt
 			case SET_POINT:
 				break;
 			case SET_POINT_ACK:
-				ctx.close();
+				send(ctx, new Logout(++serialNo));
 				break;
 			case REQ_MODIFY_PASSWORD:
 				break;

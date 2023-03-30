@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.github.apuex.cmcc.cint3.EnumAccessMode;
 import com.github.apuex.cmcc.cint3.HeartBeatAck;
 import com.github.apuex.cmcc.cint3.Login;
+import com.github.apuex.cmcc.cint3.Logout;
 import com.github.apuex.cmcc.cint3.Message;
 import com.github.apuex.cmcc.cint3.NodeIDArray;
 import com.github.apuex.cmcc.cint3.SetDynAccessMode;
@@ -49,11 +50,12 @@ public class DynAccessHandler extends io.netty.channel.ChannelInboundHandlerAdap
 			case LOGOUT:
 				break;
 			case LOGOUT_ACK:
+				ctx.close();
 				break;
 			case SET_DYN_ACCESS_MODE:
 				break;
 			case DYN_ACCESS_MODE_ACK:
-				ctx.close();
+				send(ctx, new Logout(++serialNo));
 				break;
 			case SET_ALARM_MODE:
 				break;
@@ -70,7 +72,6 @@ public class DynAccessHandler extends io.netty.channel.ChannelInboundHandlerAdap
 			case REQ_MODIFY_PASSWORD:
 				break;
 			case MODIFY_PASSWORD_ACK:
-				ctx.close();
 				break;
 			case HEART_BEAT:
 				send(ctx, new HeartBeatAck(message.SerialNo));

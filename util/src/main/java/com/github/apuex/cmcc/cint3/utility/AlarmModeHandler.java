@@ -72,7 +72,6 @@ public class AlarmModeHandler extends io.netty.channel.ChannelInboundHandlerAdap
 			case REQ_MODIFY_PASSWORD:
 				break;
 			case MODIFY_PASSWORD_ACK:
-				ctx.close();
 				break;
 			case HEART_BEAT:
 				send(ctx, new HeartBeatAck(message.SerialNo));
