@@ -81,7 +81,7 @@ public class Main {
 				put("mq-host", "localhost");
 				put("mq-port", "7676");
 				put("mq-user", "guest");
-				put("mq-pass", "guest");
+				put("mq-passwd", "guest");
 			}
 		};
 	}
@@ -103,7 +103,7 @@ public class Main {
 		options.addOption(new Option(null, "mq-host", true, "message broker host"));
 		options.addOption(new Option(null, "mq-port", true, "message broker port"));
 		options.addOption(new Option(null, "mq-user", true, "message broker user name"));
-		options.addOption(new Option(null, "mq-pass", true, "message broker password"));
+		options.addOption(new Option(null, "mq-passwd", true, "message broker password"));
 		options.addOption(new Option("h", "help", false, "print help message"));
 		return options;
 	}
