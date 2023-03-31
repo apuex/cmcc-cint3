@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
  * AI、DI值的结构的父类
  */
 public class Util {
-	static public final Charset	charset							= Charset.forName("GB18030");
+	static public final Charset	charset							= Charset.forName("UTF-8");
 	static public final byte		padding							= 0x20;
 	static public final short		CRC16_INITIAL_VALUE	= (short) 0xFFFF;
 	// static public final short CRC16_POLYNOMIAL = (short)0xA001;
@@ -32,7 +32,8 @@ public class Util {
 		byte[] ba = s.getBytes(charset);
 		if (ba.length <= maxLength) {
 			buf.put(ba);
-			for (int i = 0; i != (maxLength - ba.length); ++i) {
+			final int paddingLength = (maxLength - ba.length);
+			for (int i = 0; i < paddingLength; ++i) {
 				buf.put(padding);
 			}
 		} else {
@@ -45,6 +46,29 @@ public class Util {
 		buf.get(ba);
 		String s = new String(ba, charset);
 		return s.trim();
+	}
+
+	static public void encodeStringNTS(ByteBuffer buf, String s, int maxLength) {
+		byte[] ba = s.getBytes(charset);
+		if (ba.length <= maxLength) {
+			buf.put(ba);
+			final int paddingLength = (maxLength - ba.length);
+			if (paddingLength > 0) {
+				for (int i = 0; i < paddingLength - 1; ++i) {
+					buf.put(padding);
+				}
+				buf.put((byte) 0);
+			}
+		} else {
+			throw new IllegalArgumentException(String.format("String '%s' is too long.", s));
+		}
+	}
+
+	static public String decodeStringUnTrimmed(ByteBuffer buf, int maxLength) {
+		byte[] ba = new byte[maxLength];
+		buf.get(ba);
+		String s = new String(ba, charset);
+		return s;
 	}
 
 	/* CRC16 checksum */
@@ -70,6 +94,7 @@ public class Util {
 		return CRC16(CRC16_POLYNOMIAL, CRC16_REVERSE_BITS, crc16, b);
 	}
 
+	/*
 	public static short CRC16(byte[] ba, int begin, int end) {
 		short crc16 = CRC16_INITIAL_VALUE;
 		for (int i = begin; i != end; ++i) {
@@ -77,5 +102,62 @@ public class Util {
 		}
 		return crc16;
 	}
+	*/
+	
+	public static short crc16(int poly, int initial, byte[] ba, int begin, int end) {
+		int crc = 0xFFFF & initial;
+		for(int i = begin; i < end; ++i) {
+			crc = 0xFFFF & (crc ^ (0xFF & ba[i]));
+			for(int j = 0; j < 8; ++j) {
+				int flag = crc & 1;
+				crc = crc >>> 1;
+				if(1 == flag) {
+					crc = 0xFFFF & (crc ^ poly);
+				}
+			}
+		}
+		return (short)(0xFFFF & crc);
+	}
+	
+	public static short CRC16(byte[] ba, int begin, int end) {
+		return crc16(0xA001, 0xFFFF, ba, begin, end);
+	}
+	/*
+crc16Update :: Word16 -> Bool -> Word16 -> Word8 -> Word16
+crc16Update poly inverse initial byte = foldl iter crc0 [1..8]
+    where crc0           = xor initial (fromIntegral byte)
+          iter     crc _ = let flag = (crc .&. 0x0001);
+                               crc1 = (shiftR crc 1)
+                               in if (1 == flag) then xor crc1 poly else crc1
 
+crc16 :: Word16 -> Bool -> Word16 -> [Word8] -> Word16
+crc16 poly inverse initial bs = let newCRC16 = B.foldl (crc16Update poly inverse) initial . B.pack $ bs
+                                in (shiftL newCRC16 8) .|. (shiftR newCRC16 8)  
+
+addCRC16 :: BaseFrame -> BaseFrame
+addCRC16 f = f { frameCRC16 = crc16 0xA001 False 0xFFFF bytes }
+    where bytes = BL.unpack
+                    $ BL.drop 4
+                    $ BL.take (fromIntegral $ (frameLength f) - 2)
+                    $ encode f
+
+	 */
+	/*
+	static short CRC16(byte[] data, int begin, int end) // CRC校验码
+	{
+		int flag = 0;
+		int crc = 0xFFFF;
+		for (int i = 0; i < data.length; i++) {
+			crc = (crc ^ (0xFF & data[i]));
+			for (int j = 0; j < 8; j++) {
+				flag = (crc & 1);
+				crc = (crc >>> 1);
+				if (flag == 1)
+					crc = (0xFFFF & (crc ^ 0xA001));
+			}
+		}
+
+		return (short) (crc & 0xFFFF);
+	} 
+	*/  
 }

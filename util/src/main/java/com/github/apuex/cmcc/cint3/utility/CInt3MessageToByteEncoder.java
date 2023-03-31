@@ -132,6 +132,7 @@ public class CInt3MessageToByteEncoder extends MessageToByteEncoder<Message> {
       	}
       	sb.append("}");
       	logger.info(sb.toString());
+		logger.info(String.format("[%s] SND : %s", ctx.channel().remoteAddress(), msg));
 		out.writeBytes(array, 0, buf.position());
 	}
 

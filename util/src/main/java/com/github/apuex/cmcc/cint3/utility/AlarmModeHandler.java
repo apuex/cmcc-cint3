@@ -29,7 +29,7 @@ public class AlarmModeHandler extends io.netty.channel.ChannelInboundHandlerAdap
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		logger.info(String.format("[%s] SYN : connection established.", ctx.channel().remoteAddress()));
-		send(ctx, new Login(++serialNo, params.get("server-user"), params.get("server-passwd")));
+		send(ctx, new Login(serialNo++, params.get("server-user"), params.get("server-passwd")));
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class AlarmModeHandler extends io.netty.channel.ChannelInboundHandlerAdap
 			case LOGIN_ACK: {
 //				List<Integer> l = new LinkedList<Integer>();
 //		        l.add(Integer.parseInt(params.get("node-id")));
-				send(ctx, new SetAlarmMode(++serialNo, EnumAlarmMode.HINT, new NodeIDArray()));
+				send(ctx, new SetAlarmMode(serialNo++, EnumAlarmMode.HINT, new NodeIDArray()));
 			}
 				break;
 			case LOGOUT:
@@ -108,6 +108,5 @@ public class AlarmModeHandler extends io.netty.channel.ChannelInboundHandlerAdap
 
 	private void send(ChannelHandlerContext ctx, Message out) {
 		ctx.writeAndFlush(out);
-		logger.info(String.format("[%s] SND : %s", ctx.channel().remoteAddress(), out));
 	}
 }

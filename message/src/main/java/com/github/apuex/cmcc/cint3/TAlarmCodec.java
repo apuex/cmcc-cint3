@@ -26,7 +26,7 @@ public class TAlarmCodec {
         buf.putInt(v.Id);
         buf.putInt(v.LSCID);
         buf.putInt(v.State.getValue());
-        Util.encodeString(buf, v.AlarmDesc, Lengths.ALARM_LENGTH);
+        Util.encodeStringNTS(buf, v.AlarmDesc, Lengths.ALARM_LENGTH);
     }
 
     public TAlarm decode(ByteBuffer buf) {

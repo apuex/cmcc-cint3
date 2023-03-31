@@ -40,11 +40,12 @@ public class SendAlarmCodec {
         buf.position(initialPos + 4);
         buf.putInt(v.Length);
         buf.position(pos - 2);
-        v.CRC16 = Util.CRC16(buf.array(), initialPos, pos - 2);
+        v.CRC16 = Util.CRC16(buf.array(), initialPos + 4, pos - 2);
         buf.putShort(v.CRC16);
     }
 
     public SendAlarm decode(ByteBuffer buf) {
+        final int initialPos = buf.position();
         SendAlarm v = new SendAlarm();
         // Message HEAD - envelope fields
         v.Header = buf.getInt();
@@ -53,6 +54,7 @@ public class SendAlarmCodec {
         v.PKType = EnumPKType.fromValue(buf.getInt());
         // Message CONTENT BEGIN 
         v.Values = this.ValuesCodec.decode(buf);
+        buf.position(initialPos + v.Length - 2);
         // Message CONTENT END 
         // Message TAIL - envelope fields
         v.CRC16 = buf.getShort();
