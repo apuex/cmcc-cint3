@@ -13,11 +13,9 @@ import com.github.apuex.cmcc.cint3.ModifyPassword;
 
 import ch.qos.logback.classic.Logger;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.ReferenceCountUtil;
 
 public class ModifyPasswdHandler extends io.netty.channel.ChannelInboundHandlerAdapter {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ServerHandler.class);
-	private int serialNo = 0;
 	private Map<String, String> params;
 
 	public ModifyPasswdHandler(Map<String, String> params) {
@@ -26,7 +24,8 @@ public class ModifyPasswdHandler extends io.netty.channel.ChannelInboundHandlerA
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		logger.info(String.format("[%s] SYN : connection established.", ctx.channel().remoteAddress()));
-		send(ctx, new Login(++serialNo, params.get("server-user"), params.get("server-passwd")));
+		SerialNo.initSerialNo(ctx.channel());
+		send(ctx, new Login(SerialNo.nextSerialNo(ctx.channel()), params.get("server-user"), params.get("server-passwd")));
 		ctx.fireChannelActive();
 	}
 
@@ -39,7 +38,7 @@ public class ModifyPasswdHandler extends io.netty.channel.ChannelInboundHandlerA
 			case LOGIN:
 				break;
 			case LOGIN_ACK:
-				send(ctx, new ModifyPassword(++serialNo
+				send(ctx, new ModifyPassword(SerialNo.nextSerialNo(ctx.channel())
 						, params.get("server-user")
 						, params.get("server-passwd")
 						, params.get("server-new-passwd") == null ? params.get("server-passwd") : params.get("server-new-passwd")));
@@ -68,7 +67,7 @@ public class ModifyPasswdHandler extends io.netty.channel.ChannelInboundHandlerA
 			case REQ_MODIFY_PASSWORD:
 				break;
 			case MODIFY_PASSWORD_ACK:
-				send(ctx, new Logout(++serialNo));
+				send(ctx, new Logout(SerialNo.nextSerialNo(ctx.channel())));
 				break;
 			case HEART_BEAT:
 				send(ctx, new HeartBeatAck(message.SerialNo));
@@ -88,7 +87,7 @@ public class ModifyPasswdHandler extends io.netty.channel.ChannelInboundHandlerA
 				break;
 			}
 		}
-		ReferenceCountUtil.release(msg);
+		ctx.fireChannelRead(msg);
 	}
 
 	@Override
@@ -105,6 +104,5 @@ public class ModifyPasswdHandler extends io.netty.channel.ChannelInboundHandlerA
 
 	private void send(ChannelHandlerContext ctx, Message out) {
 		ctx.writeAndFlush(out);
-		logger.info(String.format("[%s] SND : %s", ctx.channel().remoteAddress(), out));
 	}
 }

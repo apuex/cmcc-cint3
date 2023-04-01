@@ -16,11 +16,9 @@ import com.github.apuex.cmcc.cint3.TA;
 
 import ch.qos.logback.classic.Logger;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.ReferenceCountUtil;
 
 public class SetPointHandler extends io.netty.channel.ChannelInboundHandlerAdapter {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ServerHandler.class);
-	private int serialNo = 0;
 	private Map<String, String> params;
 
 	public SetPointHandler(Map<String, String> params) {
@@ -29,7 +27,8 @@ public class SetPointHandler extends io.netty.channel.ChannelInboundHandlerAdapt
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		logger.info(String.format("[%s] SYN : connection established.", ctx.channel().remoteAddress()));
-		send(ctx, new Login(++serialNo, params.get("server-user"), params.get("server-passwd")));
+		SerialNo.initSerialNo(ctx.channel());
+		send(ctx, new Login(SerialNo.nextSerialNo(ctx.channel()), params.get("server-user"), params.get("server-passwd")));
 	}
 
 	@Override
@@ -47,7 +46,7 @@ public class SetPointHandler extends io.netty.channel.ChannelInboundHandlerAdapt
 				ta.Id = 2;
 				ta.Value = 0;
 				ta.State = EnumState.NOALARM;
-				send(ctx, new SetPoint(++serialNo, ta));
+				send(ctx, new SetPoint(SerialNo.nextSerialNo(ctx.channel()), ta));
 			}
 				break;
 			case LOGOUT:
@@ -70,7 +69,7 @@ public class SetPointHandler extends io.netty.channel.ChannelInboundHandlerAdapt
 			case SET_POINT:
 				break;
 			case SET_POINT_ACK:
-				send(ctx, new Logout(++serialNo));
+				send(ctx, new Logout(SerialNo.nextSerialNo(ctx.channel())));
 				break;
 			case REQ_MODIFY_PASSWORD:
 				break;
@@ -94,7 +93,7 @@ public class SetPointHandler extends io.netty.channel.ChannelInboundHandlerAdapt
 				break;
 			}
 		}
-		ReferenceCountUtil.release(msg);
+		ctx.fireChannelRead(msg);
 	}
 
 	@Override
@@ -111,6 +110,5 @@ public class SetPointHandler extends io.netty.channel.ChannelInboundHandlerAdapt
 
 	private void send(ChannelHandlerContext ctx, Message out) {
 		ctx.writeAndFlush(out);
-		logger.info(String.format("[%s] SND : %s", ctx.channel().remoteAddress(), out));
 	}
 }

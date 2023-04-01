@@ -16,11 +16,9 @@ import com.github.apuex.cmcc.cint3.SetAlarmMode;
 
 import ch.qos.logback.classic.Logger;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.ReferenceCountUtil;
 
 public class AlarmModeHandler extends io.netty.channel.ChannelInboundHandlerAdapter {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ServerHandler.class);
-	private int serialNo = 0;
 	private Map<String, String> params;
 
 	public AlarmModeHandler(Map<String, String> params) {
@@ -29,7 +27,8 @@ public class AlarmModeHandler extends io.netty.channel.ChannelInboundHandlerAdap
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		logger.info(String.format("[%s] SYN : connection established.", ctx.channel().remoteAddress()));
-		send(ctx, new Login(serialNo++, params.get("server-user"), params.get("server-passwd")));
+		SerialNo.initSerialNo(ctx.channel());
+		send(ctx, new Login(SerialNo.nextSerialNo(ctx.channel()), params.get("server-user"), params.get("server-passwd")));
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class AlarmModeHandler extends io.netty.channel.ChannelInboundHandlerAdap
 			case LOGIN_ACK: {
 //				List<Integer> l = new LinkedList<Integer>();
 //		        l.add(Integer.parseInt(params.get("node-id")));
-				send(ctx, new SetAlarmMode(serialNo++, EnumAlarmMode.HINT, new NodeIDArray()));
+				send(ctx, new SetAlarmMode(SerialNo.nextSerialNo(ctx.channel()), 1, EnumAlarmMode.HINT, new NodeIDArray()));
 			}
 				break;
 			case LOGOUT:
@@ -91,7 +90,7 @@ public class AlarmModeHandler extends io.netty.channel.ChannelInboundHandlerAdap
 				break;
 			}
 		}
-		ReferenceCountUtil.release(msg);
+		ctx.fireChannelRead(msg);
 	}
 
 	@Override

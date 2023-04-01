@@ -17,11 +17,9 @@ import com.github.apuex.cmcc.cint3.SetDynAccessMode;
 
 import ch.qos.logback.classic.Logger;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.ReferenceCountUtil;
 
 public class DynAccessHandler extends io.netty.channel.ChannelInboundHandlerAdapter {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ServerHandler.class);
-	private int serialNo = 0;
 	private Map<String, String> params;
 
 	public DynAccessHandler(Map<String, String> params) {
@@ -30,7 +28,8 @@ public class DynAccessHandler extends io.netty.channel.ChannelInboundHandlerAdap
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		logger.info(String.format("[%s] SYN : connection established.", ctx.channel().remoteAddress()));
-		send(ctx, new Login(++serialNo, params.get("server-user"), params.get("server-passwd")));
+		SerialNo.initSerialNo(ctx.channel());
+		send(ctx, new Login(SerialNo.nextSerialNo(ctx.channel()), params.get("server-user"), params.get("server-passwd")));
 	}
 
 	@Override
@@ -44,7 +43,7 @@ public class DynAccessHandler extends io.netty.channel.ChannelInboundHandlerAdap
 			case LOGIN_ACK: {
 				List<Integer> l = new LinkedList<Integer>();
 		        l.add(Integer.parseInt(params.get("node-id")));
-				send(ctx, new SetDynAccessMode(++serialNo, 1, 2, EnumAccessMode.ASK_ANSWER, 30, new NodeIDArray(l)));
+				send(ctx, new SetDynAccessMode(SerialNo.nextSerialNo(ctx.channel()), 1, 2, EnumAccessMode.ASK_ANSWER, 30, new NodeIDArray(l)));
 			}
 				break;
 			case LOGOUT:
@@ -55,7 +54,7 @@ public class DynAccessHandler extends io.netty.channel.ChannelInboundHandlerAdap
 			case SET_DYN_ACCESS_MODE:
 				break;
 			case DYN_ACCESS_MODE_ACK:
-				send(ctx, new Logout(++serialNo));
+				send(ctx, new Logout(SerialNo.nextSerialNo(ctx.channel())));
 				break;
 			case SET_ALARM_MODE:
 				break;
@@ -91,7 +90,7 @@ public class DynAccessHandler extends io.netty.channel.ChannelInboundHandlerAdap
 				break;
 			}
 		}
-		ReferenceCountUtil.release(msg);
+		ctx.fireChannelRead(msg);
 	}
 
 	@Override
@@ -108,6 +107,5 @@ public class DynAccessHandler extends io.netty.channel.ChannelInboundHandlerAdap
 
 	private void send(ChannelHandlerContext ctx, Message out) {
 		ctx.writeAndFlush(out);
-		logger.info(String.format("[%s] SND : %s", ctx.channel().remoteAddress(), out));
 	}
 }

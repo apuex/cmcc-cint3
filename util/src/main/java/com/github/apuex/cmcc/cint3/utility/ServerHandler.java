@@ -33,14 +33,12 @@ import com.github.apuex.cmcc.cint3.TimeCheckAck;
 
 import ch.qos.logback.classic.Logger;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.ScheduledFuture;
 
 public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ServerHandler.class);
 	@SuppressWarnings("rawtypes")
 	ScheduledFuture heartBeatTask;
-	private int serialNo = 0;
 
 	public ServerHandler(Map<String, String> params) {
 		this.params = params;
@@ -49,8 +47,9 @@ public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		logger.info(String.format("[%s] SYN : connection established.", ctx.channel().remoteAddress()));
+		SerialNo.initSerialNo(ctx.channel());
 		heartBeatTask = ctx.executor().scheduleWithFixedDelay(() -> {
-			HeartBeat msg = new HeartBeat(++serialNo);
+			HeartBeat msg = new HeartBeat(SerialNo.nextSerialNo(ctx.channel()));
 			ctx.writeAndFlush(msg);
 			logger.info(String.format("[%s] SND : %s", ctx.channel().remoteAddress(), msg));
 		}, 5, 5, TimeUnit.SECONDS);
@@ -153,7 +152,7 @@ public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter
 				break;
 			}
 		}
-		ReferenceCountUtil.release(msg);
+		ctx.fireChannelRead(msg);
 	}
 
 	@Override
@@ -171,7 +170,6 @@ public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter
 
 	private void send(ChannelHandlerContext ctx, Message out) {
 		ctx.writeAndFlush(out);
-		logger.info(String.format("[%s] SND : %s", ctx.channel().remoteAddress(), out));
 	}
 	
 	private Map<String, String> params;

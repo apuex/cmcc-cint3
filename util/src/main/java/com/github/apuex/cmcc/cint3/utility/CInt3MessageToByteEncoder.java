@@ -136,7 +136,6 @@ public class CInt3MessageToByteEncoder extends MessageToByteEncoder<Message> {
 		out.writeBytes(array, 0, buf.position());
 	}
 
-
 	public CInt3MessageToByteEncoder() {
 		AlarmModeAckCodec = new AlarmModeAckCodec();
 		DynAccessModeAckCodec = new DynAccessModeAckCodec();
@@ -159,7 +158,7 @@ public class CInt3MessageToByteEncoder extends MessageToByteEncoder<Message> {
 		TimeCheckAckCodec = new TimeCheckAckCodec();
 		TimeCheckCodec = new TimeCheckCodec();
 	}
-	
+
 	private AlarmModeAckCodec AlarmModeAckCodec;
 	private DynAccessModeAckCodec DynAccessModeAckCodec;
 	private HeartBeatAckCodec HeartBeatAckCodec;
