@@ -37,7 +37,7 @@ public class Util {
 				buf.put(padding);
 			}
 		} else {
-			throw new IllegalArgumentException(String.format("String '%s' is too long.", s));
+			buf.put(ba, 0, maxLength);
 		}
 	}
 
@@ -50,18 +50,18 @@ public class Util {
 
 	static public void encodeStringNTS(ByteBuffer buf, String s, int maxLength) {
 		byte[] ba = s.getBytes(charset);
-		if (ba.length <= maxLength) {
+		if (ba.length < maxLength) {
 			buf.put(ba);
 			final int paddingLength = (maxLength - ba.length);
 			if (paddingLength > 0) {
 				for (int i = 0; i < paddingLength - 1; ++i) {
 					buf.put(padding);
 				}
-				buf.put((byte) 0);
 			}
 		} else {
-			throw new IllegalArgumentException(String.format("String '%s' is too long.", s));
+			buf.put(ba, 0, maxLength - 1);
 		}
+		buf.put((byte) 0);
 	}
 
 	static public String decodeStringUnTrimmed(ByteBuffer buf, int maxLength) {

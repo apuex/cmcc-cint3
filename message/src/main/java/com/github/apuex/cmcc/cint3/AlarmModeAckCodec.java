@@ -46,6 +46,7 @@ public class AlarmModeAckCodec {
     }
 
     public AlarmModeAck decode(ByteBuffer buf) {
+        final int initialPos = buf.position();
         AlarmModeAck v = new AlarmModeAck();
         // Message HEAD - envelope fields
         v.Header = buf.getInt();
@@ -57,7 +58,7 @@ public class AlarmModeAckCodec {
         v.Result = EnumResult.fromValue(buf.getInt());
         // Message CONTENT END 
         // Message TAIL - envelope fields
-        v.CRC16 = buf.getShort();
+        buf.position(initialPos + v.Length - 2);v.CRC16 = buf.getShort();
         return v;
     }
 

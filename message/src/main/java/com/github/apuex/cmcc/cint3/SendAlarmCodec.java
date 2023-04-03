@@ -54,10 +54,9 @@ public class SendAlarmCodec {
         v.PKType = EnumPKType.fromValue(buf.getInt());
         // Message CONTENT BEGIN 
         v.Values = this.ValuesCodec.decode(buf);
-        buf.position(initialPos + v.Length - 2);
         // Message CONTENT END 
         // Message TAIL - envelope fields
-        v.CRC16 = buf.getShort();
+        buf.position(initialPos + v.Length - 2);v.CRC16 = buf.getShort();
         return v;
     }
 

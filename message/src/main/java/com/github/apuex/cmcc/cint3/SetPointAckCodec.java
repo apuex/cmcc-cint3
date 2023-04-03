@@ -47,6 +47,7 @@ public class SetPointAckCodec {
     }
 
     public SetPointAck decode(ByteBuffer buf) {
+        final int initialPos = buf.position();
         SetPointAck v = new SetPointAck();
         // Message HEAD - envelope fields
         v.Header = buf.getInt();
@@ -59,7 +60,7 @@ public class SetPointAckCodec {
         v.Result = EnumResult.fromValue(buf.getInt());
         // Message CONTENT END 
         // Message TAIL - envelope fields
-        v.CRC16 = buf.getShort();
+        buf.position(initialPos + v.Length - 2);v.CRC16 = buf.getShort();
         return v;
     }
 

@@ -46,6 +46,7 @@ public class NotifyPropertyModifyCodec {
     }
 
     public NotifyPropertyModify decode(ByteBuffer buf) {
+        final int initialPos = buf.position();
         NotifyPropertyModify v = new NotifyPropertyModify();
         // Message HEAD - envelope fields
         v.Header = buf.getInt();
@@ -57,7 +58,7 @@ public class NotifyPropertyModifyCodec {
         v.ModifyType = EnumModifyType.fromValue(buf.getInt());
         // Message CONTENT END 
         // Message TAIL - envelope fields
-        v.CRC16 = buf.getShort();
+        buf.position(initialPos + v.Length - 2);v.CRC16 = buf.getShort();
         return v;
     }
 

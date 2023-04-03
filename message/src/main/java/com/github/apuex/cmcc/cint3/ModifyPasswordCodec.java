@@ -47,6 +47,7 @@ public class ModifyPasswordCodec {
     }
 
     public ModifyPassword decode(ByteBuffer buf) {
+        final int initialPos = buf.position();
         ModifyPassword v = new ModifyPassword();
         // Message HEAD - envelope fields
         v.Header = buf.getInt();
@@ -59,7 +60,7 @@ public class ModifyPasswordCodec {
         v.NewPassWord = Util.decodeString(buf, Lengths.PASSWORD_LENGTH);
         // Message CONTENT END 
         // Message TAIL - envelope fields
-        v.CRC16 = buf.getShort();
+        buf.position(initialPos + v.Length - 2);v.CRC16 = buf.getShort();
         return v;
     }
 

@@ -45,6 +45,7 @@ public class TimeCheckCodec {
     }
 
     public TimeCheck decode(ByteBuffer buf) {
+        final int initialPos = buf.position();
         TimeCheck v = new TimeCheck();
         // Message HEAD - envelope fields
         v.Header = buf.getInt();
@@ -55,7 +56,7 @@ public class TimeCheckCodec {
         v.Time = this.TimeCodec.decode(buf);
         // Message CONTENT END 
         // Message TAIL - envelope fields
-        v.CRC16 = buf.getShort();
+        buf.position(initialPos + v.Length - 2);v.CRC16 = buf.getShort();
         return v;
     }
 

@@ -46,6 +46,7 @@ public class LoginCodec {
     }
 
     public Login decode(ByteBuffer buf) {
+        final int initialPos = buf.position();
         Login v = new Login();
         // Message HEAD - envelope fields
         v.Header = buf.getInt();
@@ -57,7 +58,7 @@ public class LoginCodec {
         v.PassWord = Util.decodeString(buf, Lengths.PASSWORD_LENGTH);
         // Message CONTENT END 
         // Message TAIL - envelope fields
-        v.CRC16 = buf.getShort();
+        buf.position(initialPos + v.Length - 2);v.CRC16 = buf.getShort();
         return v;
     }
 

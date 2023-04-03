@@ -45,6 +45,7 @@ public class TimeCheckAckCodec {
     }
 
     public TimeCheckAck decode(ByteBuffer buf) {
+        final int initialPos = buf.position();
         TimeCheckAck v = new TimeCheckAck();
         // Message HEAD - envelope fields
         v.Header = buf.getInt();
@@ -55,7 +56,7 @@ public class TimeCheckAckCodec {
         v.Result = EnumResult.fromValue(buf.getInt());
         // Message CONTENT END 
         // Message TAIL - envelope fields
-        v.CRC16 = buf.getShort();
+        buf.position(initialPos + v.Length - 2);v.CRC16 = buf.getShort();
         return v;
     }
 

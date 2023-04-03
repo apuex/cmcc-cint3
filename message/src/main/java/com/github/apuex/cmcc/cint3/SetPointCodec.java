@@ -45,6 +45,7 @@ public class SetPointCodec {
     }
 
     public SetPoint decode(ByteBuffer buf) {
+        final int initialPos = buf.position();
         SetPoint v = new SetPoint();
         // Message HEAD - envelope fields
         v.Header = buf.getInt();
@@ -55,7 +56,7 @@ public class SetPointCodec {
         v.Value = this.ValueCodec.decode(buf);
         // Message CONTENT END 
         // Message TAIL - envelope fields
-        v.CRC16 = buf.getShort();
+        buf.position(initialPos + v.Length - 2);v.CRC16 = buf.getShort();
         return v;
     }
 

@@ -28,6 +28,6 @@ public class Lengths {
     public static final int UNIT_LENGTH = 8; // 数据单位的长度 8字节
     public static final int STATE_LENGTH = 160; // 态值描述长度 160字节
     public static final int VER_LENGTH = 20; // 版本描述的长度 20字节
-    public static final int STATION_NAME_LEN = 120; // 局站的名字长度 20字节
+    public static final int STATION_NAME_LEN = 154; // 局站的名字长度 20字节
 }
 
