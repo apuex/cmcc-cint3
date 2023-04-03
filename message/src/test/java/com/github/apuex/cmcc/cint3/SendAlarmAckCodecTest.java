@@ -24,8 +24,8 @@ import org.junit.Test;
 public class SendAlarmAckCodecTest {
     @Test
     public void testEncode() {
-        byte[] expected = new byte[] 
-            { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x44, (byte)0x01, (byte)0x00, (byte)0x00
+        byte[] expected = new byte[]
+            { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x3F, (byte)0x01, (byte)0x00, (byte)0x00
             , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xF8, (byte)0x01, (byte)0x00, (byte)0x00
             , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00
             , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00
@@ -64,8 +64,7 @@ public class SendAlarmAckCodecTest {
             , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
             , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
             , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
-            , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
-            , (byte)0x20, (byte)0x00, (byte)0x14, (byte)0xFE
+            , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x00, (byte)0x65, (byte)0x30
             };
         List<TAlarm> l = new LinkedList<TAlarm>();
         TAlarm alarm = new TAlarm();
@@ -75,7 +74,7 @@ public class SendAlarmAckCodecTest {
         alarm.AlarmDesc = "Critical.";
         l.add(alarm);
         SendAlarmAck v = new SendAlarmAck(2, new TAlarmArray(l));
-      	byte[] actual = new byte[324];
+      	byte[] actual = new byte[319];
       	ByteBuffer buf = ByteBuffer.wrap(actual);
       	buf.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -95,7 +94,7 @@ public class SendAlarmAckCodecTest {
     @Test
     public void testDecode() {
         byte[] input = new byte[] 
-            { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x44, (byte)0x01, (byte)0x00, (byte)0x00
+            { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x3F, (byte)0x01, (byte)0x00, (byte)0x00
             , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xF8, (byte)0x01, (byte)0x00, (byte)0x00
             , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00
             , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00
@@ -134,8 +133,7 @@ public class SendAlarmAckCodecTest {
             , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
             , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
             , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
-            , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
-            , (byte)0x20, (byte)0x00, (byte)0x14, (byte)0xFE
+            , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x00, (byte)0x65, (byte)0x30
             };
         List<TAlarm> l = new LinkedList<TAlarm>();
         TAlarm alarm = new TAlarm();
@@ -146,7 +144,7 @@ public class SendAlarmAckCodecTest {
         l.add(alarm);
         SendAlarmAck expected = new SendAlarmAck(2, new TAlarmArray(l));
       	expected.Length = input.length;
-      	expected.CRC16 = (short)0xFE14;
+      	expected.CRC16 = (short)0x3065;
       	ByteBuffer buf = ByteBuffer.wrap(input);
       	buf.order(ByteOrder.LITTLE_ENDIAN);
       	SendAlarmAckCodec codec = new SendAlarmAckCodec();

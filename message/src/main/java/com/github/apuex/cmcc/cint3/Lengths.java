@@ -21,7 +21,7 @@ public class Lengths {
     public static final int USER_LENGTH = 20; // 用户名长度 20字节
     public static final int PASSWORD_LENGTH = 20; // 口令长度 20字节
     public static final int EVENT_LENGTH = 160; // 事件信息长度 160字节
-    public static final int ALARM_LENGTH = 290; // 告警事件信息长度 285字节
+    public static final int ALARM_LENGTH = 285; // 告警事件信息长度 285字节
     public static final int ALARM_SERIALNO_LENGTH = 10; // 告警序号 10字节
     public static final int LOGIN_LENGTH = 100; // 登录事件信息长度 100字节
     public static final int DES_LENGTH = 40; // 描述信息长度 40字节
