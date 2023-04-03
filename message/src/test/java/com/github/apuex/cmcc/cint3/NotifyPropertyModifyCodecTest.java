@@ -23,7 +23,10 @@ public class NotifyPropertyModifyCodecTest {
     @Test
     public void testEncode() {
         byte[] expected = new byte[] 
-            { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x1A, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xDD, (byte)0x05, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x83, (byte)0x92
+            { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x1A, (byte)0x00, (byte)0x00, (byte)0x00
+			, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xDD, (byte)0x05, (byte)0x00, (byte)0x00
+			, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x00
+			, (byte)0x01, (byte)0xFB
             };
         NotifyPropertyModify v = new NotifyPropertyModify(1, 2, EnumModifyType.MODIFYINNODES);
       	byte[] actual = new byte[26];
@@ -45,12 +48,15 @@ public class NotifyPropertyModifyCodecTest {
 
     @Test
     public void testDecode() {
-        byte[] input = new byte[] 
-            { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x1A, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xDD, (byte)0x05, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x83, (byte)0x92
+        byte[] input = new byte[]
+			{ (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x1A, (byte)0x00, (byte)0x00, (byte)0x00
+			, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xDD, (byte)0x05, (byte)0x00, (byte)0x00
+			, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x00
+			, (byte)0x01, (byte)0xFB
             };
         NotifyPropertyModify expected = new NotifyPropertyModify(1, 2, EnumModifyType.MODIFYINNODES);
       	expected.Length = input.length;
-      	expected.CRC16 = (short)0x9283;
+      	expected.CRC16 = (short)0xFB01;
       	ByteBuffer buf = ByteBuffer.wrap(input);
       	buf.order(ByteOrder.LITTLE_ENDIAN);
       	NotifyPropertyModifyCodec codec = new NotifyPropertyModifyCodec();

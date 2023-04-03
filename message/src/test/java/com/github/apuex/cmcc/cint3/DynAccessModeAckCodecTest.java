@@ -33,7 +33,7 @@ public class DynAccessModeAckCodecTest {
             , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00
             , (byte)0x00, (byte)0x03, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00
             , (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00
-            , (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0xA1
+            , (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x4E, (byte)0x7C
             };
         List<TATD> vl = new LinkedList<TATD>();
         TD td = new TD();
@@ -81,7 +81,7 @@ public class DynAccessModeAckCodecTest {
                 , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00
                 , (byte)0x00, (byte)0x03, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00
                 , (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00
-                , (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0xA1
+                , (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x4E, (byte)0x7C
                 };
 
         List<TATD> vl = new LinkedList<TATD>();
@@ -102,7 +102,7 @@ public class DynAccessModeAckCodecTest {
         TATDArray Values1 = new TATDArray(vl);
         DynAccessModeAck expected = new DynAccessModeAck(1, 2, EnumResult.SUCCESS, Values1);
         expected.Length = input.length;
-      	expected.CRC16 = (short)0xA10F;
+      	expected.CRC16 = (short)0x7C4E;
         DynAccessModeAckCodec codec = new DynAccessModeAckCodec();
      
       	ByteBuffer buf = ByteBuffer.wrap(input);

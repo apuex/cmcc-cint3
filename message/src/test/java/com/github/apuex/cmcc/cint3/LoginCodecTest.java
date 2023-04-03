@@ -30,7 +30,7 @@ public class LoginCodecTest {
       	    , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x70, (byte)0x61, (byte)0x73, (byte)0x73
       	    , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
       	    , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
-      	    , (byte)0xC9, (byte)0x1C
+            , (byte)0x31, (byte)0x00
             };
         Login v = new Login(1, "user", "pass");
       	byte[] actual = new byte[58];
@@ -72,11 +72,11 @@ public class LoginCodecTest {
       	    , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x70, (byte)0x61, (byte)0x73, (byte)0x73
       	    , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
       	    , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
-      	    , (byte)0xC9, (byte)0x1C
+      	    , (byte)0x31, (byte)0x00
             };
         Login expected = new Login(1, "user", "pass");
       	expected.Length = input.length;
-      	expected.CRC16 = (short)0x1CC9;
+      	expected.CRC16 = (short)0x0031;
       	ByteBuffer buf = ByteBuffer.wrap(input);
       	buf.order(ByteOrder.LITTLE_ENDIAN);
       	LoginCodec codec = new LoginCodec();

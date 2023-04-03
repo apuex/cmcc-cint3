@@ -25,7 +25,7 @@ public class LogoutCodecTest {
         byte[] expected = new byte[] 
             { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00
             , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x67, (byte)0x00, (byte)0x00, (byte)0x00
-            , (byte)0x2E, (byte)0xD2
+            , (byte)0xC2, (byte)0x97
             };
         Logout v = new Logout(2);
       	byte[] actual = new byte[18];
@@ -50,11 +50,11 @@ public class LogoutCodecTest {
         byte[] input = new byte[] 
             { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00
             , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x67, (byte)0x00, (byte)0x00, (byte)0x00
-            , (byte)0x2E, (byte)0xD2
+            , (byte)0xC2, (byte)0x97
             };
         Logout expected = new Logout(2);
       	expected.Length = input.length;
-      	expected.CRC16 = (short)0xD22E;
+      	expected.CRC16 = (short)0x97C2;
       	ByteBuffer buf = ByteBuffer.wrap(input);
       	buf.order(ByteOrder.LITTLE_ENDIAN);
       	LogoutCodec codec = new LogoutCodec();
