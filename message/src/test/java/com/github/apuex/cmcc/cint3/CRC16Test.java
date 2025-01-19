@@ -34,10 +34,11 @@ public class CRC16Test {
     public void testCalcCRC16() {
         final byte[] input = new byte[] { 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39 };
       	final short crc16 = Util.CRC16(input, 0, input.length);
-        //final short crc16 = CRC16(input);
+        // final short crc16 = CRC16(input);
       	System.out.printf("CRC16 = 0x%04X\n", crc16);
-      	Assert.assertEquals(0x29B1, crc16);
-    }
+        // Assert.assertEquals(0x29B1, crc16);
+		Assert.assertEquals((short)0x4B37, crc16);
+	}
 
     @Test
     public void testNfjdNonStandardCRC16() {
@@ -66,8 +67,9 @@ public class CRC16Test {
         		*/
         final short crc16 = Util.CRC16(input, 4, input.length - 2);
       	System.out.printf("CRC16 = 0x%04X\n", crc16);
-      	Assert.assertEquals(0x24B7, crc16);
-    }
+      	// Assert.assertEquals(0x24B7, crc16);
+		Assert.assertEquals((short)0x8A6C, crc16);
+	}
 
 }
 

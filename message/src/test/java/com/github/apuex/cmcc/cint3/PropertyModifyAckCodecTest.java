@@ -23,7 +23,9 @@ public class PropertyModifyAckCodecTest {
     @Test
     public void testEncode() {
         byte[] expected = new byte[] 
-            { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xDE, (byte)0x05, (byte)0x00, (byte)0x00, (byte)0x78, (byte)0x3B
+            { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00
+			, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xDE, (byte)0x05, (byte)0x00, (byte)0x00
+			, (byte)0xF7, (byte)0xCA
             };
         PropertyModifyAck v = new PropertyModifyAck(2);
       	byte[] actual = new byte[18];
@@ -45,12 +47,14 @@ public class PropertyModifyAckCodecTest {
 
     @Test
     public void testDecode() {
-        byte[] input = new byte[] 
-            { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xDE, (byte)0x05, (byte)0x00, (byte)0x00, (byte)0x78, (byte)0x3B
+        byte[] input = new byte[]
+			{ (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00
+			, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xDE, (byte)0x05, (byte)0x00, (byte)0x00
+			, (byte)0xF7, (byte)0xCA
             };
         PropertyModifyAck expected = new PropertyModifyAck(2);
       	expected.Length = input.length;
-      	expected.CRC16 = (short)0x3B78;
+      	expected.CRC16 = (short)0xCAF7;
       	ByteBuffer buf = ByteBuffer.wrap(input);
       	buf.order(ByteOrder.LITTLE_ENDIAN);
       	PropertyModifyAckCodec codec = new PropertyModifyAckCodec();

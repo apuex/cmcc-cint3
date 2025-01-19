@@ -22,9 +22,12 @@ import org.junit.Test;
 public class TimeCheckCodecTest {
 	@Test
 	public void testEncodeTA() {
-		byte[] expected = new byte[] { 
-				(byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x19, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x15, (byte)0x05, (byte)0x00, (byte)0x00, (byte)0xCC, (byte)0x07, (byte)0x07, (byte)0x0E, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xF8, (byte)0x86
-				};
+		byte[] expected = new byte[]
+			{ (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x19, (byte)0x00, (byte)0x00, (byte)0x00
+			, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x15, (byte)0x05, (byte)0x00, (byte)0x00
+			, (byte)0xCC, (byte)0x07, (byte)0x07, (byte)0x0E, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x52
+			, (byte)0xF4
+			};
 		TTime ta = new TTime();
 		ta.Years = 1996;
 		ta.Month = 7;
@@ -52,9 +55,12 @@ public class TimeCheckCodecTest {
 
 	@Test
 	public void testDecodeTA() {
-		byte[] input = new byte[] { 
-				(byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x19, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x15, (byte)0x05, (byte)0x00, (byte)0x00, (byte)0xCC, (byte)0x07, (byte)0x07, (byte)0x0E, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xF8, (byte)0x86
-				};
+		byte[] input = new byte[]
+			{ (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x19, (byte)0x00, (byte)0x00, (byte)0x00
+			, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x15, (byte)0x05, (byte)0x00, (byte)0x00
+			, (byte)0xCC, (byte)0x07, (byte)0x07, (byte)0x0E, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x52
+			, (byte)0xF4
+			};
 		TTime ta = new TTime();
 		ta.Years = 1996;
 		ta.Month = 7;
@@ -64,7 +70,7 @@ public class TimeCheckCodecTest {
 		ta.Second = 0;
 		TimeCheck expected = new TimeCheck(2, ta);
 		expected.Length = input.length;
-		expected.CRC16 = (short) 0x86F8;
+		expected.CRC16 = (short) 0xF452;
 		ByteBuffer buf = ByteBuffer.wrap(input);
 		buf.order(ByteOrder.LITTLE_ENDIAN);
 

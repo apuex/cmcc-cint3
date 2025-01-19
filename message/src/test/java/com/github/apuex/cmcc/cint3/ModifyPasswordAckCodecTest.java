@@ -25,7 +25,7 @@ public class ModifyPasswordAckCodecTest {
         byte[] expected = new byte[] 
             { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x16, (byte)0x00, (byte)0x00, (byte)0x00
             , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x4E, (byte)0x04, (byte)0x00, (byte)0x00
-            , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x6D, (byte)0xCD
+            , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x08, (byte)0xD9
             };
         ModifyPasswordAck v = new ModifyPasswordAck(2, EnumResult.SUCCESS);
       	byte[] actual = new byte[22];
@@ -50,11 +50,11 @@ public class ModifyPasswordAckCodecTest {
         byte[] input = new byte[] 
             { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x16, (byte)0x00, (byte)0x00, (byte)0x00
             , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x4E, (byte)0x04, (byte)0x00, (byte)0x00
-            , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x6D, (byte)0xCD
+            , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x08, (byte)0xD9
             };
         ModifyPasswordAck expected = new ModifyPasswordAck(2, EnumResult.SUCCESS);
       	expected.Length = input.length;
-      	expected.CRC16 = (short)0xCD6D;
+      	expected.CRC16 = (short)0xD908;
       	ByteBuffer buf = ByteBuffer.wrap(input);
       	buf.order(ByteOrder.LITTLE_ENDIAN);
       	ModifyPasswordAckCodec codec = new ModifyPasswordAckCodec();

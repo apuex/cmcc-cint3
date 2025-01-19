@@ -22,12 +22,14 @@ import org.junit.Test;
 public class SetPointCodecTest {
 	@Test
 	public void testEncodeTA() {
-		byte[] expected = new byte[] { (byte) 0x5A, (byte) 0x6B, (byte) 0x7C, (byte) 0x7E, (byte) 0x26, (byte) 0x00,
+		byte[] expected = new byte[]
+				{ (byte) 0x5A, (byte) 0x6B, (byte) 0x7C, (byte) 0x7E, (byte) 0x26, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0xE9, (byte) 0x03,
 				(byte) 0x00, (byte) 0x00, (byte) 0x03, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x02, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x4D,
-				(byte) 0x61 };
+				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0E,
+				(byte) 0x65
+				};
 		TA ta = new TA();
 		ta.Type = EnumType.AI;
 		ta.LSCID = 1;
@@ -58,8 +60,8 @@ public class SetPointCodecTest {
 				(byte) 0x00, (byte) 0x00, (byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0xE9, (byte) 0x03,
 				(byte) 0x00, (byte) 0x00, (byte) 0x03, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x02, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x4D,
-				(byte) 0x61 };
+				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0E,
+				(byte) 0x65 };
 		TA ta = new TA();
 		ta.Type = EnumType.AI;
 		ta.LSCID = 1;
@@ -68,7 +70,7 @@ public class SetPointCodecTest {
 		ta.State = EnumState.NOALARM;
 		SetPoint expected = new SetPoint(2, ta);
 		expected.Length = input.length;
-		expected.CRC16 = (short) 0x614D;
+		expected.CRC16 = (short) 0x650E;
 		ByteBuffer buf = ByteBuffer.wrap(input);
 		buf.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -85,7 +87,7 @@ public class SetPointCodecTest {
 				, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xE9, (byte)0x03, (byte)0x00, (byte)0x00
 				, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00
 				, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00
-				, (byte)0x00, (byte)0xAD, (byte)0xFB
+				, (byte)0x00, (byte)0x80, (byte)0x40
 				};
 		TD td = new TD();
 		td.Type = EnumType.DI;
@@ -118,7 +120,7 @@ public class SetPointCodecTest {
 						, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xE9, (byte)0x03, (byte)0x00, (byte)0x00
 						, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00
 						, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00
-						, (byte)0x00, (byte)0xAD, (byte)0xFB
+						, (byte)0x00, (byte)0x80, (byte)0x40
 						};
 		TD td = new TD();
 		td.Type = EnumType.DI;
@@ -128,7 +130,7 @@ public class SetPointCodecTest {
 		td.State = EnumState.NOALARM;
 		SetPoint expected = new SetPoint(2, td);
 		expected.Length = input.length;
-		expected.CRC16 = (short) 0xFBAD;
+		expected.CRC16 = (short) 0x4080;
 		ByteBuffer buf = ByteBuffer.wrap(input);
 		buf.order(ByteOrder.LITTLE_ENDIAN);
 

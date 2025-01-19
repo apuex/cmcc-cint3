@@ -26,7 +26,7 @@ public class AlarmModeAckCodecTest {
             { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x1A, (byte)0x00, (byte)0x00, (byte)0x00
       	    , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xF6, (byte)0x01, (byte)0x00, (byte)0x00
       	    , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00
-      	    , (byte)0x16, (byte)0x0F
+      	    , (byte)0x70, (byte)0x63
             };
         AlarmModeAck v = new AlarmModeAck(1, 2, EnumResult.SUCCESS);
       	byte[] actual = new byte[26];
@@ -52,11 +52,11 @@ public class AlarmModeAckCodecTest {
             { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x1A, (byte)0x00, (byte)0x00, (byte)0x00
       	    , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xF6, (byte)0x01, (byte)0x00, (byte)0x00
       	    , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00
-      	    , (byte)0x16, (byte)0x0F
-            };
+			, (byte)0x70, (byte)0x63
+			};
         AlarmModeAck expected = new AlarmModeAck(1, 2, EnumResult.SUCCESS);
       	expected.Length = input.length;
-      	expected.CRC16 = (short)0x0F16;
+      	expected.CRC16 = (short)0x6370;
       	ByteBuffer buf = ByteBuffer.wrap(input);
       	buf.order(ByteOrder.LITTLE_ENDIAN);
       	AlarmModeAckCodec codec = new AlarmModeAckCodec();

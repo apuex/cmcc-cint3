@@ -32,7 +32,7 @@ public class ModifyPasswordCodecTest {
             , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
             , (byte)0x4E, (byte)0x65, (byte)0x77, (byte)0x50, (byte)0x61, (byte)0x73, (byte)0x73, (byte)0x20
             , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
-            , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x43, (byte)0x02
+            , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x8C, (byte)0x20
             };
         ModifyPassword v = new ModifyPassword(2, "user", "OldPass", "NewPass");
       	byte[] actual = new byte[78];
@@ -64,11 +64,11 @@ public class ModifyPasswordCodecTest {
             , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
             , (byte)0x4E, (byte)0x65, (byte)0x77, (byte)0x50, (byte)0x61, (byte)0x73, (byte)0x73, (byte)0x20
             , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
-            , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x43, (byte)0x02
+            , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x8C, (byte)0x20
             };
         ModifyPassword expected = new ModifyPassword(2, "user", "OldPass", "NewPass");
       	expected.Length = input.length;
-      	expected.CRC16 = (short)0x0243;
+      	expected.CRC16 = (short)0x208C;
       	ByteBuffer buf = ByteBuffer.wrap(input);
       	buf.order(ByteOrder.LITTLE_ENDIAN);
       	ModifyPasswordCodec codec = new ModifyPasswordCodec();

@@ -27,7 +27,6 @@ public class TAlarmCodec {
         buf.putInt(v.LSCID);
         buf.putInt(v.State.getValue());
         Util.encodeStringNTS(buf, v.AlarmDesc, Lengths.ALARM_LENGTH);
-        buf.putShort((short)0); // discard padding 2 bytes
     }
 
     public TAlarm decode(ByteBuffer buf) {
@@ -36,7 +35,6 @@ public class TAlarmCodec {
         v.LSCID = buf.getInt();
         v.State = EnumState.fromValue(buf.getInt());
         v.AlarmDesc = Util.decodeString(buf, Lengths.ALARM_LENGTH);
-        buf.getShort(); // discard padding 2 bytes
         return v;
     }
 

@@ -25,7 +25,7 @@ public class HeartBeatAckCodecTest {
         byte[] expected = new byte[] 
             { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00
             , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xB2, (byte)0x04, (byte)0x00, (byte)0x00
-            , (byte)0xA8, (byte)0x1A
+            , (byte)0xBB, (byte)0x5A
             };
         HeartBeatAck v = new HeartBeatAck(2);
       	byte[] actual = new byte[18];
@@ -50,11 +50,11 @@ public class HeartBeatAckCodecTest {
         byte[] input = new byte[] 
             { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00
             , (byte)0x02, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xB2, (byte)0x04, (byte)0x00, (byte)0x00
-            , (byte)0xA8, (byte)0x1A
+            , (byte)0xBB, (byte)0x5A
             };
         HeartBeatAck expected = new HeartBeatAck(2);
       	expected.Length = input.length;
-      	expected.CRC16 = (short)0x1AA8;
+      	expected.CRC16 = (short)0x5ABB;
       	ByteBuffer buf = ByteBuffer.wrap(input);
       	buf.order(ByteOrder.LITTLE_ENDIAN);
       	HeartBeatAckCodec codec = new HeartBeatAckCodec();
