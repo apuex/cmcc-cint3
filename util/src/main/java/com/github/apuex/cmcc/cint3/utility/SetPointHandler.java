@@ -20,9 +20,11 @@ import io.netty.channel.ChannelHandlerContext;
 public class SetPointHandler extends io.netty.channel.ChannelInboundHandlerAdapter {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ServerHandler.class);
 	private Map<String, String> params;
+	private int LSCID;
 
 	public SetPointHandler(Map<String, String> params) {
 		this.params = params;
+		this.LSCID = Integer.parseInt(params.getOrDefault("lsc-id", "1"));
 	}
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -42,7 +44,7 @@ public class SetPointHandler extends io.netty.channel.ChannelInboundHandlerAdapt
 			case LOGIN_ACK: {
 				TA ta = new TA();
 				ta.Type = EnumType.AI;
-				ta.LSCID = 1;
+				ta.LSCID = this.LSCID;
 				ta.Id = 2;
 				ta.Value = 0;
 				ta.State = EnumState.NOALARM;

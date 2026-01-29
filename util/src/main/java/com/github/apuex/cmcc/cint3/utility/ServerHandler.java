@@ -42,6 +42,7 @@ public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter
 
 	public ServerHandler(Map<String, String> params) {
 		this.params = params;
+		this.LSCID = Integer.parseInt(params.getOrDefault("lsc-id", "1"));
 	}
 	
 	@Override
@@ -78,14 +79,14 @@ public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter
 				List<TATD> vl = new LinkedList<TATD>();
 				TD td = new TD();
 				td.Type = EnumType.DI;
-				td.LSCID = 3;
+				td.LSCID = this.LSCID;
 				td.Id = 4;
 				td.Value = 0;
 				td.State = EnumState.NOALARM;
 				vl.add(td);
 				TA ta = new TA();
 				ta.Type = EnumType.AI;
-				ta.LSCID = 3;
+				ta.LSCID = this.LSCID;
 				ta.Id = 5;
 				ta.Value = 123.456f;
 				ta.State = EnumState.NOALARM;
@@ -173,4 +174,5 @@ public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter
 	}
 	
 	private Map<String, String> params;
+	private int LSCID;
 }
