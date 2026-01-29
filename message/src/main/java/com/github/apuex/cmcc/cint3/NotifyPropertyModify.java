@@ -71,13 +71,13 @@ public class NotifyPropertyModify extends Message {
         StringBuilder builder = new StringBuilder();
         builder
             .append("NotifyPropertyModify { ")
-            .append("Header=").append(this.Header)
+            .append("Header=").append(String.format("0x%08X", this.Header))
             .append(", ").append("Length=").append(this.Length)
             .append(", ").append("SerialNo=").append(this.SerialNo)
             .append(", ").append("PKType=").append(this.PKType)
             .append(", ").append("Id=").append(this.Id)
             .append(", ").append("ModifyType=").append(this.ModifyType)
-            .append(", ").append("CRC16=").append(this.CRC16)
+            .append(", ").append("CRC16=").append(String.format("0x%04X", this.CRC16))
             .append(" }");
 
         return builder.toString();

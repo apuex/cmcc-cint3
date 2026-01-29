@@ -81,7 +81,7 @@ public class DynAccessModeAck extends Message {
         StringBuilder builder = new StringBuilder();
         builder
             .append("DynAccessModeAck { ")
-            .append("Header=").append(this.Header)
+            .append("Header=").append(String.format("0x%08X", this.Header))
             .append(", ").append("Length=").append(this.Length)
             .append(", ").append("SerialNo=").append(this.SerialNo)
             .append(", ").append("PKType=").append(this.PKType)
@@ -89,7 +89,7 @@ public class DynAccessModeAck extends Message {
             .append(", ").append("GroupID=").append(this.GroupID)
             .append(", ").append("Result=").append(this.Result)
             .append(", ").append("Values=").append(this.Values)
-            .append(", ").append("CRC16=").append(this.CRC16)
+            .append(", ").append("CRC16=").append(String.format("0x%04X", this.CRC16))
             .append(" }");
 
         return builder.toString();
