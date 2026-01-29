@@ -1,19 +1,13 @@
 package com.github.apuex.cmcc.cint3.utility;
 
-import static java.lang.System.out;
+import ch.qos.logback.classic.Logger;
+import org.apache.commons.cli.*;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.Logger;
+import static java.lang.System.out;
 
 public class Main {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(Main.class);
@@ -74,7 +68,7 @@ public class Main {
 				put("server-new-passwd", "1234567890");
 				put("alarm-mode", "4");
 				put("dyn-access-mode", "0");
-				put("polling-time", "2");
+				put("polling-interval", "2");
 				put("node-id", "526336");
 				put("continuously", "false");
 				put("heart-beat", "30");
@@ -97,7 +91,7 @@ public class Main {
 		options.addOption(new Option(null, "alarm-mode", true, "alarm mode"));
 		options.addOption(new Option(null, "dyn-access-mode", true, "dynamic access mode"));
 		options.addOption(new Option("d", "node-id", true, "Node Id of data object"));
-		options.addOption(new Option("t", "polling-time", true, "polling interval, in second(s)"));
+		options.addOption(new Option("t", "polling-interval", true, "polling interval, in second(s)"));
 		options.addOption(new Option("c", "continuously", false, "send set dynamic access mode request continuously"));
 		options.addOption(new Option(null, "heart-beat", true, "idle timeout in second, to send heart beat message."));
 		options.addOption(new Option(null, "mq-host", true, "message broker host"));

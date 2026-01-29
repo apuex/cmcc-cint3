@@ -1,18 +1,12 @@
 package com.github.apuex.cmcc.cint3.utility;
 
 
-import java.util.Map;
-
+import ch.qos.logback.classic.Logger;
+import com.github.apuex.cmcc.cint3.*;
+import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.LoggerFactory;
 
-import com.github.apuex.cmcc.cint3.HeartBeatAck;
-import com.github.apuex.cmcc.cint3.Login;
-import com.github.apuex.cmcc.cint3.Logout;
-import com.github.apuex.cmcc.cint3.Message;
-import com.github.apuex.cmcc.cint3.ModifyPassword;
-
-import ch.qos.logback.classic.Logger;
-import io.netty.channel.ChannelHandlerContext;
+import java.util.Map;
 
 public class ModifyPasswdHandler extends io.netty.channel.ChannelInboundHandlerAdapter {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ServerHandler.class);

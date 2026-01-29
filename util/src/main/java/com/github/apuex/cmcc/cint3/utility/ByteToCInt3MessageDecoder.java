@@ -1,38 +1,15 @@
 package com.github.apuex.cmcc.cint3.utility;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.List;
-
-import org.slf4j.LoggerFactory;
-
-import com.github.apuex.cmcc.cint3.AlarmModeAckCodec;
-import com.github.apuex.cmcc.cint3.DynAccessModeAckCodec;
-import com.github.apuex.cmcc.cint3.EnumPKType;
-import com.github.apuex.cmcc.cint3.HeartBeatAckCodec;
-import com.github.apuex.cmcc.cint3.HeartBeatCodec;
-import com.github.apuex.cmcc.cint3.LoginAckCodec;
-import com.github.apuex.cmcc.cint3.LoginCodec;
-import com.github.apuex.cmcc.cint3.LogoutAckCodec;
-import com.github.apuex.cmcc.cint3.LogoutCodec;
-import com.github.apuex.cmcc.cint3.Message;
-import com.github.apuex.cmcc.cint3.ModifyPasswordAckCodec;
-import com.github.apuex.cmcc.cint3.ModifyPasswordCodec;
-import com.github.apuex.cmcc.cint3.NotifyPropertyModifyCodec;
-import com.github.apuex.cmcc.cint3.PropertyModifyAckCodec;
-import com.github.apuex.cmcc.cint3.SendAlarmAckCodec;
-import com.github.apuex.cmcc.cint3.SendAlarmCodec;
-import com.github.apuex.cmcc.cint3.SetAlarmModeCodec;
-import com.github.apuex.cmcc.cint3.SetDynAccessModeCodec;
-import com.github.apuex.cmcc.cint3.SetPointAckCodec;
-import com.github.apuex.cmcc.cint3.SetPointCodec;
-import com.github.apuex.cmcc.cint3.TimeCheckAckCodec;
-import com.github.apuex.cmcc.cint3.TimeCheckCodec;
-
 import ch.qos.logback.classic.Logger;
+import com.github.apuex.cmcc.cint3.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import org.slf4j.LoggerFactory;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.List;
 
 public class ByteToCInt3MessageDecoder extends ByteToMessageDecoder {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ByteToCInt3MessageDecoder.class);
@@ -55,6 +32,8 @@ public class ByteToCInt3MessageDecoder extends ByteToMessageDecoder {
 		final int length = buf.getInt();
 		if (in.readableBytes() < length)
 			return; // frame header + length
+
+		logBytesReceived(ctx, array, length);
 
 		@SuppressWarnings("unused")
 		final int serialNo = buf.getInt();
@@ -127,14 +106,18 @@ public class ByteToCInt3MessageDecoder extends ByteToMessageDecoder {
 			ctx.close();
 			break;
 		}
-		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("[%s] DEC : bytes[%d] = { ", ctx.channel().remoteAddress(), buf.position()));
-      	for(int i = 0; i != buf.position(); ++i) {
-          sb.append(String.format("%02X ", 0xff & array[i]));
-      	}
-      	sb.append("}");
-      	logger.info(sb.toString());
 		in.skipBytes(buf.position());
+	}
+
+	private static void logBytesReceived(ChannelHandlerContext ctx, byte[] array, int size) {
+		System.out.printf("array.length = %d, size = %d\n", array.length, size);
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[%s] DEC : bytes[%d] = { ", ctx.channel().remoteAddress(), size));
+		for(int i = 0; i != size; ++i) {
+			sb.append(String.format("%02X ", 0xff & array[i]));
+		}
+		sb.append("}");
+		logger.info(sb.toString());
 	}
 
 	public ByteToCInt3MessageDecoder() {

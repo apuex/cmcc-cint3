@@ -1,56 +1,16 @@
 package com.github.apuex.cmcc.cint3.utility;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
-import org.slf4j.LoggerFactory;
-
-import com.github.apuex.cmcc.cint3.AlarmModeAck;
-import com.github.apuex.cmcc.cint3.AlarmModeAckCodec;
-import com.github.apuex.cmcc.cint3.DynAccessModeAck;
-import com.github.apuex.cmcc.cint3.DynAccessModeAckCodec;
-import com.github.apuex.cmcc.cint3.HeartBeat;
-import com.github.apuex.cmcc.cint3.HeartBeatAck;
-import com.github.apuex.cmcc.cint3.HeartBeatAckCodec;
-import com.github.apuex.cmcc.cint3.HeartBeatCodec;
-import com.github.apuex.cmcc.cint3.Login;
-import com.github.apuex.cmcc.cint3.LoginAck;
-import com.github.apuex.cmcc.cint3.LoginAckCodec;
-import com.github.apuex.cmcc.cint3.LoginCodec;
-import com.github.apuex.cmcc.cint3.Logout;
-import com.github.apuex.cmcc.cint3.LogoutAck;
-import com.github.apuex.cmcc.cint3.LogoutAckCodec;
-import com.github.apuex.cmcc.cint3.LogoutCodec;
-import com.github.apuex.cmcc.cint3.Message;
-import com.github.apuex.cmcc.cint3.ModifyPassword;
-import com.github.apuex.cmcc.cint3.ModifyPasswordAck;
-import com.github.apuex.cmcc.cint3.ModifyPasswordAckCodec;
-import com.github.apuex.cmcc.cint3.ModifyPasswordCodec;
-import com.github.apuex.cmcc.cint3.NotifyPropertyModify;
-import com.github.apuex.cmcc.cint3.NotifyPropertyModifyCodec;
-import com.github.apuex.cmcc.cint3.PropertyModifyAck;
-import com.github.apuex.cmcc.cint3.PropertyModifyAckCodec;
-import com.github.apuex.cmcc.cint3.SendAlarm;
-import com.github.apuex.cmcc.cint3.SendAlarmAck;
-import com.github.apuex.cmcc.cint3.SendAlarmAckCodec;
-import com.github.apuex.cmcc.cint3.SendAlarmCodec;
-import com.github.apuex.cmcc.cint3.SetAlarmMode;
-import com.github.apuex.cmcc.cint3.SetAlarmModeCodec;
-import com.github.apuex.cmcc.cint3.SetDynAccessMode;
-import com.github.apuex.cmcc.cint3.SetDynAccessModeCodec;
-import com.github.apuex.cmcc.cint3.SetPoint;
-import com.github.apuex.cmcc.cint3.SetPointAck;
-import com.github.apuex.cmcc.cint3.SetPointAckCodec;
-import com.github.apuex.cmcc.cint3.SetPointCodec;
-import com.github.apuex.cmcc.cint3.TimeCheck;
-import com.github.apuex.cmcc.cint3.TimeCheckAck;
-import com.github.apuex.cmcc.cint3.TimeCheckAckCodec;
-import com.github.apuex.cmcc.cint3.TimeCheckCodec;
-
 import ch.qos.logback.classic.Logger;
+import com.github.apuex.cmcc.cint3.SetPoint;
+import com.github.apuex.cmcc.cint3.TimeCheck;
+import com.github.apuex.cmcc.cint3.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import org.slf4j.LoggerFactory;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class CInt3MessageToByteEncoder extends MessageToByteEncoder<Message> {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(CInt3MessageToByteEncoder.class);
@@ -125,15 +85,19 @@ public class CInt3MessageToByteEncoder extends MessageToByteEncoder<Message> {
 			ctx.close();
 			break;
 		}
-		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("[%s] ENC : bytes[%d] = { ", ctx.channel().remoteAddress(), buf.position()));
-      	for(int i = 0; i != buf.position(); ++i) {
-          sb.append(String.format("%02X ", 0xff & array[i]));
-      	}
-      	sb.append("}");
-      	logger.info(sb.toString());
+		logBytesSent(ctx, array, buf.position());
 		logger.info(String.format("[%s] SND : %s", ctx.channel().remoteAddress(), msg));
 		out.writeBytes(array, 0, buf.position());
+	}
+
+	private static void logBytesSent(ChannelHandlerContext ctx, byte[] array, int size) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("[%s] ENC : bytes[%d] = { ", ctx.channel().remoteAddress(), size));
+		for(int i = 0; i != size; ++i) {
+			sb.append(String.format("%02X ", 0xff & array[i]));
+		}
+		sb.append("}");
+		logger.info(sb.toString());
 	}
 
 	public CInt3MessageToByteEncoder() {

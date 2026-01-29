@@ -1,45 +1,20 @@
 package com.github.apuex.cmcc.cint3.utility;
 
+import ch.qos.logback.classic.Logger;
+import com.github.apuex.cmcc.cint3.SetPoint;
+import com.github.apuex.cmcc.cint3.*;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.concurrent.ScheduledFuture;
+import org.slf4j.LoggerFactory;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.LoggerFactory;
-
-import com.github.apuex.cmcc.cint3.AlarmModeAck;
-import com.github.apuex.cmcc.cint3.DynAccessModeAck;
-import com.github.apuex.cmcc.cint3.EnumResult;
-import com.github.apuex.cmcc.cint3.EnumRightMode;
-import com.github.apuex.cmcc.cint3.EnumState;
-import com.github.apuex.cmcc.cint3.EnumType;
-import com.github.apuex.cmcc.cint3.HeartBeat;
-import com.github.apuex.cmcc.cint3.HeartBeatAck;
-import com.github.apuex.cmcc.cint3.LoginAck;
-import com.github.apuex.cmcc.cint3.LogoutAck;
-import com.github.apuex.cmcc.cint3.Message;
-import com.github.apuex.cmcc.cint3.ModifyPassword;
-import com.github.apuex.cmcc.cint3.ModifyPasswordAck;
-import com.github.apuex.cmcc.cint3.PropertyModifyAck;
-import com.github.apuex.cmcc.cint3.SetAlarmMode;
-import com.github.apuex.cmcc.cint3.SetDynAccessMode;
-import com.github.apuex.cmcc.cint3.SetPoint;
-import com.github.apuex.cmcc.cint3.SetPointAck;
-import com.github.apuex.cmcc.cint3.TA;
-import com.github.apuex.cmcc.cint3.TATD;
-import com.github.apuex.cmcc.cint3.TATDArray;
-import com.github.apuex.cmcc.cint3.TD;
-import com.github.apuex.cmcc.cint3.TimeCheckAck;
-
-import ch.qos.logback.classic.Logger;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.concurrent.ScheduledFuture;
-
 public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ServerHandler.class);
 	@SuppressWarnings("rawtypes")
-	ScheduledFuture heartBeatTask;
-
 	public ServerHandler(Map<String, String> params) {
 		this.params = params;
 		this.LSCID = Integer.parseInt(params.getOrDefault("lsc-id", "1"));
@@ -52,7 +27,6 @@ public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter
 		heartBeatTask = ctx.executor().scheduleWithFixedDelay(() -> {
 			HeartBeat msg = new HeartBeat(SerialNo.nextSerialNo(ctx.channel()));
 			ctx.writeAndFlush(msg);
-			logger.info(String.format("[%s] SND : %s", ctx.channel().remoteAddress(), msg));
 		}, 5, 5, TimeUnit.SECONDS);
 
 		ctx.fireChannelActive();
@@ -175,4 +149,6 @@ public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter
 	
 	private Map<String, String> params;
 	private int LSCID;
+	private ScheduledFuture heartBeatTask;
+
 }
