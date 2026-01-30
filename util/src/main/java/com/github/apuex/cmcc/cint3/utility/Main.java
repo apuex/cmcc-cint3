@@ -137,7 +137,7 @@ public class Main {
 
 	private static void printHelp(final Options options) {
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("cmcc-cint3-nfjd <options> <command>,\n"
+		formatter.printHelp("cmcc-cint3-util <options> <command>,\n"
 				+ "where command = server,\n"
 				+ "                dyn-access,\n"
 				+ "                alarm-mode,\n"

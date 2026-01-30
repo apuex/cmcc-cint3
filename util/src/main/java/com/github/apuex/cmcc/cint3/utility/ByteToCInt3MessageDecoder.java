@@ -110,7 +110,6 @@ public class ByteToCInt3MessageDecoder extends ByteToMessageDecoder {
 	}
 
 	private static void logBytesReceived(ChannelHandlerContext ctx, byte[] array, int size) {
-		System.out.printf("array.length = %d, size = %d\n", array.length, size);
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("[%s] DEC : bytes[%d] = { ", ctx.channel().remoteAddress(), size));
 		for(int i = 0; i != size; ++i) {
