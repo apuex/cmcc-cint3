@@ -14,6 +14,8 @@
 package com.github.apuex.cmcc.cint3;
 
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 当前告警值的结构
@@ -22,6 +24,47 @@ import java.io.Serializable;
  */
 public class TAlarm implements Serializable {
     private static final long serialVersionUID = 1L;
+    public static final String SERIAL_NO_PATTERN = "0*([0-9]+)";
+    public static final String ALARM_NAME_PATTERN = "([^\\|]+)\\|([^\\|]*)\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)(\\|([^\\|]*))?";
+    public static final String ALARM_TIME_PATTERN = "([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})";
+    public static final String LSC_ID_PATTERN = "([0-9]+)";
+    public static final String NODE_ID_PATTERN = "([0-9A-Fa-f]+\\.[0-9A-Fa-f]{2}\\.[0-9A-Fa-f]{3})";
+    public static final String ALARM_DESC_PATTERN = "(\\S+)\\s+(\\S+)\\s+(\\S*)(-触发值)\\s*(\\S+)";
+
+    private Pattern pattern = Pattern.compile(alarmDescPattern());
+
+    public TAlarm() {
+
+    }
+
+    public TAlarm( int Id
+                 , int LSCID
+                 , EnumState State
+                 , String AlarmDesc
+                 )
+    {
+        this.Id = Id;
+        this.LSCID = LSCID;
+        this.State = State;
+        this.AlarmDesc = AlarmDesc;
+    }
+    public static final String alarmIdFromDescPattern() {
+        return String.format("^\\[%s%s\\s+%s.*"
+                , SERIAL_NO_PATTERN
+                , ALARM_NAME_PATTERN
+                , ALARM_TIME_PATTERN
+        );
+    }
+    public static final String alarmDescPattern() {
+        return String.format("^(\\S{1})%s\\s+%s\\s+%s\\s+%s\\s+%s\\s+%s\\s+(\\S{1})"
+                , SERIAL_NO_PATTERN
+                , ALARM_NAME_PATTERN
+                , ALARM_TIME_PATTERN
+                , LSC_ID_PATTERN
+                , NODE_ID_PATTERN
+                , ALARM_DESC_PATTERN
+        );
+    }
 
     @Override
     public boolean equals(Object o) {

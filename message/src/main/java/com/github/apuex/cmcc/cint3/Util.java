@@ -15,11 +15,15 @@ package com.github.apuex.cmcc.cint3;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * AI、DI值的结构的父类
  */
 public class Util {
+	static public final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	static public final Charset	charset							= Charset.forName("UTF-8");
 	static public final byte		padding							= 0x20;
 	static public final short		CRC16_INITIAL_VALUE	= (short) 0xFFFF;
@@ -28,6 +32,19 @@ public class Util {
 	static public final short		CRC16_POLYNOMIAL		= (short) 0x1021;
 	static public final boolean	CRC16_REVERSE_BITS	= false;
 
+	static public String formatDate(Date date) {
+		SimpleDateFormat format = new SimpleDateFormat(DATE_TIME_FORMAT);
+		return format.format(date);
+	}
+
+	static public Date parseDate(String s) {
+		SimpleDateFormat format = new SimpleDateFormat(DATE_TIME_FORMAT);
+		try {
+			return format.parse(s);
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+	}
 	static public void encodeString(ByteBuffer buf, String s, int maxLength) {
 		byte[] ba = s.getBytes(charset);
 		if (ba.length <= maxLength) {

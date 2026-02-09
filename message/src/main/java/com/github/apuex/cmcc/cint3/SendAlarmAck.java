@@ -13,6 +13,8 @@
 
 package com.github.apuex.cmcc.cint3;
 
+import java.util.List;
+
 /**
  * 实时告警发送确认
  *
@@ -38,6 +40,14 @@ public class SendAlarmAck extends Message {
     ) {
         super(SerialNo, EnumPKType.SEND_ALARM_ACK);
         this.Values = Values;
+    }
+
+    public SendAlarmAck
+    ( int SerialNo
+    , List<TAlarm> Values
+    ) {
+        super(SerialNo, EnumPKType.SEND_ALARM_ACK);
+        this.Values = new TAlarmArray(Values);
     }
 
     @Override
