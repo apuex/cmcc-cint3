@@ -19,6 +19,22 @@ package com.github.apuex.cmcc.cint3;
  * @author Wangxy
  */
 public class TD extends TATD {
+    public TD() {
+        this.Type = EnumType.DI;
+    }
+    public TD(
+        int Id,
+        int LSCID,
+        byte Value,
+        EnumState State
+    ) {
+        this.Type = EnumType.DI;
+        this.Id = Id;
+        this.LSCID = LSCID;
+        this.Value = Value;
+        this.State = State;
+    }
+
     private static final long serialVersionUID = 1L;
 
     @Override
