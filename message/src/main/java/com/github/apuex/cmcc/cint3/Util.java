@@ -24,7 +24,7 @@ import java.util.Date;
  */
 public class Util {
 	static public final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-	static public final Charset	charset							= Charset.forName("UTF-8");
+	static public final Charset	charset							= Charset.forName("GB18030");
 	static public final byte		padding							= 0x20;
 	static public final short		CRC16_INITIAL_VALUE	= (short) 0xFFFF;
 	// static public final short CRC16_POLYNOMIAL = (short)0xA001;
