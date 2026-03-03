@@ -37,9 +37,11 @@ public class TATDCodec {
 		TATD v = null;
 		switch (dataType) {
 		case AI:
+		case AO:
 			v = taCodec.decode(buf);
 			break;
 		case DI:
+		case DO:
 			v = tdCodec.decode(buf);
 			break;
 		default:
