@@ -74,6 +74,19 @@ public class BCD implements Comparable<BCD> {
         return isValid(this.b, this.c, this.d);
     }
 
+    public static String format(BCD bcd)
+    {
+        return String.format("%04X.%02X.%03X", bcd.b, bcd.c, bcd.d);
+    }
+
+    public static BCD parse(String s)
+    {
+        String[] sa = s.split("\\.");
+        int b = Integer.parseInt(sa[0], 16);
+        int c = Integer.parseInt(sa[1], 16);
+        int d = Integer.parseInt(sa[2], 16);
+        return new BCD(b, c, d);
+    }
     @Override
     public int compareTo(BCD o) {
         return Integer.compare(toNodeId(), o.toNodeId());
