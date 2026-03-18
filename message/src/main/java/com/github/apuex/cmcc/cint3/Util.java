@@ -24,17 +24,21 @@ import java.util.Date;
  */
 public class Util {
 	static public final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-	static public final Charset	charset							= Charset.forName("GB18030");
-	static public final byte		padding							= 0x20;
-	static public final short		CRC16_INITIAL_VALUE	= (short) 0xFFFF;
+	static public final Charset charset = Charset.forName("GB18030");
+	static public final byte padding = 0x20;
+	static public final short CRC16_INITIAL_VALUE = (short) 0xFFFF;
 	// static public final short CRC16_POLYNOMIAL = (short)0xA001;
 	// static public final short CRC16_INITIAL_VALUE = (short)0x0000;
-	static public final short		CRC16_POLYNOMIAL		= (short) 0x1021;
-	static public final boolean	CRC16_REVERSE_BITS	= false;
+	static public final short CRC16_POLYNOMIAL = (short) 0x1021;
+	static public final boolean CRC16_REVERSE_BITS = false;
 
 	static public String formatDate(Date date) {
-		SimpleDateFormat format = new SimpleDateFormat(DATE_TIME_FORMAT);
-		return format.format(date);
+		if (date == null) {
+			return "";
+		} else {
+			SimpleDateFormat format = new SimpleDateFormat(DATE_TIME_FORMAT);
+			return format.format(date);
+		}
 	}
 
 	static public Date parseDate(String s) {
@@ -45,6 +49,7 @@ public class Util {
 			throw new RuntimeException(e);
 		}
 	}
+
 	static public void encodeString(ByteBuffer buf, String s, int maxLength) {
 		byte[] ba = s.getBytes(charset);
 		if (ba.length <= maxLength) {
@@ -91,7 +96,7 @@ public class Util {
 	/* CRC16 checksum */
 	public static byte reverseBits(byte b) {
 		return (byte) ((b & 0x01) << 7 | (b & 0x02) << 5 | (b & 0x04) << 3 | (b & 0x08) << 1 | (b & 0x10) >>> 1
-		    | (b & 0x20) >>> 3 | (b & 0x40) >>> 5 | (b & 0x80) >>> 7);
+				| (b & 0x20) >>> 3 | (b & 0x40) >>> 5 | (b & 0x80) >>> 7);
 	}
 
 	public static short newCRC16(short crc16, boolean rev, byte b) {
@@ -111,7 +116,7 @@ public class Util {
 		return CRC16(CRC16_POLYNOMIAL, CRC16_REVERSE_BITS, crc16, b);
 	}
 
-	/*
+    /*
 	public static short CRC16(byte[] ba, int begin, int end) {
 		short crc16 = CRC16_INITIAL_VALUE;
 		for (int i = begin; i != end; ++i) {
@@ -120,7 +125,7 @@ public class Util {
 		return crc16;
 	}
 	*/
-	
+
 	public static short crc16(int poly, int initial, byte[] ba, int begin, int end) {
 		int crc = 0xFFFF & initial;
 		for(int i = begin; i < end; ++i) {
@@ -135,11 +140,11 @@ public class Util {
 		}
 		return (short)(0xFFFF & crc);
 	}
-	
+
 	public static short CRC16(byte[] ba, int begin, int end) {
 		return crc16(0xA001, 0xFFFF, ba, begin, end);
 	}
-	/*
+    /*
 crc16Update :: Word16 -> Bool -> Word16 -> Word8 -> Word16
 crc16Update poly inverse initial byte = foldl iter crc0 [1..8]
     where crc0           = xor initial (fromIntegral byte)
@@ -159,7 +164,7 @@ addCRC16 f = f { frameCRC16 = crc16 0xA001 False 0xFFFF bytes }
                     $ encode f
 
 	 */
-	/*
+    /*
 	static short CRC16(byte[] data, int begin, int end) // CRC校验码
 	{
 		int flag = 0;
