@@ -29,7 +29,8 @@ public class TAlarm implements Serializable {
     public static final String ALARM_TIME_PATTERN = "([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})";
     public static final String LSC_ID_PATTERN = "([0-9]+)";
     public static final String NODE_ID_PATTERN = "([0-9A-Fa-f]+\\.[0-9A-Fa-f]{2}\\.[0-9A-Fa-f]{3})";
-    public static final String ALARM_DESC_PATTERN = "(\\S+)\\s+(\\S+)\\s+(\\S*)(-触发值)\\s*(\\S+)";
+    public static final String ALARM_DESC_PATTERN = "(\\S+)\\s+(\\S+)\\s+(.*)";
+    //public static final String ALARM_DESC_PATTERN = "(\\S+)\\s+(\\S+)\\s+(\\S*)(-触发值)\\s*(\\S+)";
 
     private Pattern pattern = Pattern.compile(alarmDescPattern());
 
@@ -56,7 +57,7 @@ public class TAlarm implements Serializable {
         );
     }
     public static final String alarmDescPattern() {
-        return String.format("^(\\S{1})%s\\s+%s\\s+%s\\s+%s\\s+%s\\s+%s\\s+(\\S{1})"
+        return String.format("^(\\[)%s\\s+%s\\s+%s\\s+%s\\s+%s\\s+%s\\s*(\\]).*$"
                 , SERIAL_NO_PATTERN
                 , ALARM_NAME_PATTERN
                 , ALARM_TIME_PATTERN
