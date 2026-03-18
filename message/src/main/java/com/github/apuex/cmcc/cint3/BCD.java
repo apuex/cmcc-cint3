@@ -74,6 +74,11 @@ public class BCD implements Comparable<BCD> {
         return isValid(this.b, this.c, this.d);
     }
 
+    public static String format(int nodeId)
+    {
+        return format(fromNodeId(nodeId));
+    }
+
     public static String format(BCD bcd)
     {
         return String.format("%04X.%02X.%03X", bcd.b, bcd.c, bcd.d);
