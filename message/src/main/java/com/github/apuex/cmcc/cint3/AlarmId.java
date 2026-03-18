@@ -9,24 +9,28 @@ import java.util.regex.Pattern;
 
 public class AlarmId {
     public AlarmId( final long serialNo
-            , final int nodeId
-            , final Date timestamp
-            , final EnumState state
+                  , final Date alarmTime
+                  , final int LSCId
+                  , final int nodeId
+                  , final EnumState state
     ) {
         this.serialNo = serialNo;
+        this.alarmTime = alarmTime;
+        this.LSCId = LSCId;
         this.nodeId = nodeId;
-        this.timestamp = timestamp;
         this.state = state;
     }
 
     public AlarmId( final long serialNo
+                  , final long alarmTime
+                  , final int LSCId
                   , final int nodeId
-                  , final long timestamp
                   , final EnumState state
     ) {
         this.serialNo = serialNo;
+        this.alarmTime = new Date(alarmTime);
+        this.LSCId = LSCId;
         this.nodeId = nodeId;
-        this.timestamp = new Date(timestamp);
         this.state = state;
     }
 
@@ -34,12 +38,13 @@ public class AlarmId {
         Pattern pattern = Pattern.compile(TAlarm.alarmDescPattern());
         Matcher matched = pattern.matcher(alarm.AlarmDesc);
         if(matched.find()) {
+            final int LSCId = alarm.LSCID;
             final int nodeId = alarm.Id;
             final EnumState state = alarm.State;
             long serialNo = Long.parseLong(matched.group(2));
             String alarmTime = matched.group(10);
             Date timestamp = Util.parseDate(alarmTime);
-            return new AlarmId(serialNo, nodeId, timestamp, state);
+            return new AlarmId(serialNo, timestamp, LSCId, nodeId, state);
         } else {
             throw new RuntimeException(String.format("Failed to convert AlarmId from TAlarm %s", alarm));
         }
@@ -49,10 +54,11 @@ public class AlarmId {
         ByteBuffer buf = ByteBuffer.wrap(bytes);
         buf.order(ByteOrder.LITTLE_ENDIAN);
         final long serialNo = buf.getLong();
-        final int nodeId = buf.getInt();
         final long timestamp = buf.getLong();
+        final int LSCId = buf.getInt();
+        final int nodeId = buf.getInt();
         final int state = buf.getInt();
-        return new AlarmId(serialNo, nodeId, timestamp, EnumState.fromValue(state));
+        return new AlarmId(serialNo, timestamp, LSCId, nodeId, EnumState.fromValue(state));
     }
 
     public static byte[] toBytes(final AlarmId alarmId) {
@@ -60,8 +66,9 @@ public class AlarmId {
         ByteBuffer buf = ByteBuffer.wrap(bytes);
         buf.order(ByteOrder.LITTLE_ENDIAN);
         buf.putLong(alarmId.serialNo);
+        buf.putInt(alarmId.LSCId);
+        buf.putLong(alarmId.alarmTime.getTime());
         buf.putInt(alarmId.nodeId);
-        buf.putLong(alarmId.timestamp.getTime());
         buf.putInt(alarmId.state.getValue());
         return bytes;
     }
@@ -71,26 +78,28 @@ public class AlarmId {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AlarmId alarmId = (AlarmId) o;
-        return nodeId == alarmId.nodeId && timestamp == alarmId.timestamp && state == alarmId.state;
+        return serialNo == alarmId.serialNo && LSCId == alarmId.LSCId && nodeId == alarmId.nodeId && Objects.equals(alarmTime, alarmId.alarmTime) && state == alarmId.state;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nodeId, timestamp, state);
+        return Objects.hash(serialNo, alarmTime, LSCId, nodeId, state);
     }
 
     @Override
     public String toString() {
         return "AlarmId{" +
                 "serialNo=" + serialNo +
+                ", alarmTime=" + Util.formatDate(alarmTime) +
+                ", LSCId=" + LSCId +
                 ", nodeId=" + nodeId +
-                ", timestamp=" + Util.formatDate(timestamp) +
                 ", state=" + state +
                 '}';
     }
 
     final public long serialNo; // 流水
+    final public Date alarmTime; // 告警时间
+    final public int LSCId; // LSC ID
     final public int nodeId; // 数据标识ID
-    final public Date timestamp; // LSC ID
     final public EnumState state; // 数值的状态
 }
