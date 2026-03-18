@@ -93,7 +93,8 @@ public class AlarmId {
                 ", alarmTime=" + Util.formatDate(alarmTime) +
                 ", LSCId=" + LSCId +
                 ", nodeId=" + nodeId +
-                ", state=" + state +
+                "(BCD=" + BCD.format(nodeId) +
+                "), state=" + state +
                 '}';
     }
 
