@@ -13,12 +13,14 @@ public class AlarmId {
                   , final int LSCId
                   , final int nodeId
                   , final EnumState state
+                  , final int AlarmStatus
     ) {
         this.serialNo = serialNo;
         this.alarmTime = alarmTime;
         this.LSCId = LSCId;
         this.nodeId = nodeId;
         this.state = state;
+        this.AlarmStatus = AlarmStatus;
     }
 
     public AlarmId( final long serialNo
@@ -26,12 +28,14 @@ public class AlarmId {
                   , final int LSCId
                   , final int nodeId
                   , final EnumState state
+                  , final int AlarmStatus
     ) {
         this.serialNo = serialNo;
         this.alarmTime = new Date(alarmTime);
         this.LSCId = LSCId;
         this.nodeId = nodeId;
         this.state = state;
+        this.AlarmStatus = AlarmStatus;
     }
 
     public static AlarmId fromTAlarm(final TAlarm alarm) {
@@ -41,13 +45,17 @@ public class AlarmId {
             final int LSCId = alarm.LSCID;
             final int nodeId = alarm.Id;
             final EnumState state = alarm.State;
-            long serialNo = Long.parseLong(matched.group(2));
-            String alarmTime = matched.group(10);
-            Date timestamp = Util.parseDate(alarmTime);
-            return new AlarmId(serialNo, timestamp, LSCId, nodeId, state);
+            final long serialNo = Long.parseLong(matched.group(2));
+            final Date timestamp = Util.parseDate(matched.group(10));
+            final int alarmState = alarmStateFromString(matched.group(14));
+            return new AlarmId(serialNo, timestamp, LSCId, nodeId, state, alarmState);
         } else {
             throw new RuntimeException(String.format("Failed to convert AlarmId from TAlarm %s", alarm));
         }
+    }
+
+    public static int alarmStateFromString(String s) {
+        if(s.equals("开始")) return 0; else return 2;
     }
 
     public static AlarmId fromBytes(byte[] bytes) {
@@ -58,11 +66,12 @@ public class AlarmId {
         final int LSCId = buf.getInt();
         final int nodeId = buf.getInt();
         final int state = buf.getInt();
-        return new AlarmId(serialNo, timestamp, LSCId, nodeId, EnumState.fromValue(state));
+        final int alarmState = buf.getInt();
+        return new AlarmId(serialNo, timestamp, LSCId, nodeId, EnumState.fromValue(state), alarmState);
     }
 
     public static byte[] toBytes(final AlarmId alarmId) {
-        byte[] bytes = new byte[24];
+        byte[] bytes = new byte[32];
         ByteBuffer buf = ByteBuffer.wrap(bytes);
         buf.order(ByteOrder.LITTLE_ENDIAN);
         buf.putLong(alarmId.serialNo);
@@ -70,6 +79,7 @@ public class AlarmId {
         buf.putLong(alarmId.alarmTime.getTime());
         buf.putInt(alarmId.nodeId);
         buf.putInt(alarmId.state.getValue());
+        buf.putInt(alarmId.AlarmStatus);
         return bytes;
     }
 
@@ -78,12 +88,17 @@ public class AlarmId {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AlarmId alarmId = (AlarmId) o;
-        return serialNo == alarmId.serialNo && LSCId == alarmId.LSCId && nodeId == alarmId.nodeId && Objects.equals(alarmTime, alarmId.alarmTime) && state == alarmId.state;
+        return serialNo == alarmId.serialNo
+                && LSCId == alarmId.LSCId
+                && nodeId == alarmId.nodeId
+                && AlarmStatus == alarmId.AlarmStatus
+                && Objects.equals(alarmTime, alarmId.alarmTime)
+                && state == alarmId.state;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(serialNo, alarmTime, LSCId, nodeId, state);
+        return Objects.hash(serialNo, alarmTime, LSCId, nodeId, state, AlarmStatus);
     }
 
     @Override
@@ -95,6 +110,7 @@ public class AlarmId {
                 ", nodeId=" + nodeId +
                 "(BCD=" + BCD.format(nodeId) +
                 "), state=" + state +
+                ", AlarmStatus=" + AlarmStatus +
                 '}';
     }
 
@@ -103,4 +119,5 @@ public class AlarmId {
     final public int LSCId; // LSC ID
     final public int nodeId; // 数据标识ID
     final public EnumState state; // 数值的状态
+    final public int AlarmStatus;
 }

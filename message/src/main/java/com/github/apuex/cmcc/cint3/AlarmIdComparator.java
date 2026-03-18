@@ -13,6 +13,8 @@ public final class AlarmIdComparator implements Comparator<AlarmId> {
         if(0 != LSCIdCompareResult ) return LSCIdCompareResult;
         int nodeIdCompareResult = Integer.compare(l.nodeId, r.nodeId);
         if(0 != nodeIdCompareResult ) return nodeIdCompareResult;
-        return Integer.compare(l.state.getValue(), r.state.getValue());
+        int stateCompareResult = Integer.compare(l.state.getValue(), r.state.getValue());
+        if(0 != stateCompareResult) return stateCompareResult;
+        return Integer.compare(l.AlarmStatus, r.AlarmStatus);
     }
 }
