@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 public class TAlarm implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String SERIAL_NO_PATTERN = "0*([0-9]+)";
-    public static final String ALARM_NAME_PATTERN = "([^\\|]+)\\|([^\\|]*)\\|([^\\|]+)\\|([^\\|]+)\\|([^\\|]+)(\\|([^\\|]*))?";
+    public static final String ALARM_NAME_PATTERN = "([^\\|]+)\\|([^\\|]*)\\|([^\\|]+)\\|([^\\|]*)\\|([^\\|]+)(\\|([^\\|]*))?";
     public static final String ALARM_TIME_PATTERN = "([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})";
     public static final String LSC_ID_PATTERN = "([0-9]+)";
     public static final String NODE_ID_PATTERN = "([0-9A-Fa-f]+\\.[0-9A-Fa-f]{2}\\.[0-9A-Fa-f]{3})";
