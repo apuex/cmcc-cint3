@@ -52,8 +52,13 @@ public class TATDArray implements Serializable {
       StringBuilder builder = new StringBuilder();
       builder
           .append("TATDArray { ")
-          .append("values=").append(this.values)
-          .append(" }");
+          .append("\r\n  values=\r\n  [ ");
+      this.values.stream()
+          .map(x -> String.format("%s", x) )
+          .reduce((x, y) -> String.format("%s\r\n  , %s", x, y))
+          .map(x -> builder.append(x));
+      builder
+          .append("\r\n  ] }");
 
       return builder.toString();
   }
