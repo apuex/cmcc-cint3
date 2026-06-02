@@ -166,7 +166,7 @@ public class SendAlarmCodecTest {
     @Test
     public void testDecodeYAAO() {
         byte[] input = new byte[] //bytes[362] =
-                { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x67, (byte)0x01, (byte)0x00, (byte)0x00
+                { (byte)0x5A, (byte)0x6B, (byte)0x7C, (byte)0x7E, (byte)0x6A, (byte)0x01, (byte)0x00, (byte)0x00
                 , (byte)0x84, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0xF7, (byte)0x01, (byte)0x00, (byte)0x00
                 , (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x05, (byte)0x80, (byte)0x18, (byte)0x03
                 , (byte)0x80, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x36, (byte)0x32, (byte)0x30, (byte)0x2D
@@ -210,7 +210,8 @@ public class SendAlarmCodecTest {
                 , (byte)0x30, (byte)0x33, (byte)0x34, (byte)0x2D, (byte)0xB4, (byte)0xA5, (byte)0xB7, (byte)0xA2
                 , (byte)0xD6, (byte)0xB5, (byte)0x20, (byte)0x20, (byte)0x31, (byte)0x2E, (byte)0x30, (byte)0x30
                 , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x5D
-                , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0xCA, (byte)0xEA };
+                , (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20, (byte)0x20
+                , (byte)0x04, (byte)0x1E };
         List<TAlarm> l = new LinkedList<>();
         TAlarm alarm = new TAlarm();
         alarm.Id = 51937285;
@@ -221,7 +222,7 @@ public class SendAlarmCodecTest {
         l.add(alarm);
         SendAlarm expected = new SendAlarm(388, new TAlarmArray(l));
         expected.Length = input.length;
-        expected.CRC16 = (short)0xEACA;
+        expected.CRC16 = (short)0x1E04;
         ByteBuffer buf = ByteBuffer.wrap(input);
         buf.order(ByteOrder.LITTLE_ENDIAN);
         SendAlarmCodec codec = new SendAlarmCodec();
