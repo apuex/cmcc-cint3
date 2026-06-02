@@ -479,6 +479,13 @@ tdStruct = Meta.Struct
     }
 
 -- TAlarm
+nmAlarmId = Meta.StringField
+    { Meta.fieldName    = "NMAlarmID"
+    , Meta.fieldSize    = "Lengths::MAX_DESC_LENGTH"
+    , Meta.fieldValue   = ""
+    , Meta.fieldComment = "网管告警ID"
+    }
+
 alarmDesc = Meta.StringField
     { Meta.fieldName    = "AlarmDesc"
     , Meta.fieldSize    = "Lengths::ALARM_LENGTH"

@@ -40,12 +40,14 @@ public class TAlarm implements Serializable {
 
     public TAlarm( int Id
                  , int LSCID
+                 , String NMAlarmID
                  , EnumState State
                  , String AlarmDesc
                  )
     {
         this.Id = Id;
         this.LSCID = LSCID;
+        this.NMAlarmID = NMAlarmID;
         this.State = State;
         this.AlarmDesc = AlarmDesc;
     }
@@ -79,6 +81,7 @@ public class TAlarm implements Serializable {
         boolean result =
             ( this.Id == r.Id
             && this.LSCID == r.LSCID
+            && this.NMAlarmID.equals(r.NMAlarmID)
             && this.State == r.State
             && this.AlarmDesc.equals(r.AlarmDesc)
             );
@@ -93,6 +96,7 @@ public class TAlarm implements Serializable {
             .append("TAlarm { ")
             .append("Id=").append(this.Id)
             .append(", ").append("LSCID=").append(this.LSCID)
+            .append(", ").append("NMAlarmID=").append(this.NMAlarmID)
             .append(", ").append("State=").append(this.State)
             .append(", ").append("AlarmDesc=").append(this.AlarmDesc)
             .append(" }");
@@ -102,6 +106,7 @@ public class TAlarm implements Serializable {
 
     public int Id; // 数据标识ID
     public int LSCID; // LSC ID
+    public String NMAlarmID; // 网管告警ID
     public EnumState State; // 数值的状态
     public String AlarmDesc; // 告警描述
 }

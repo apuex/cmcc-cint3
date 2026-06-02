@@ -25,14 +25,16 @@ public class TAlarmCodec {
     public void encode(ByteBuffer buf, TAlarm v) {
         buf.putInt(v.Id);
         buf.putInt(v.LSCID);
+        Util.encodeString(buf, v.NMAlarmID, Lengths.DES_LENGTH);
         buf.putInt(v.State.getValue());
-        Util.encodeStringNTS(buf, v.AlarmDesc, Lengths.ALARM_LENGTH);
+        Util.encodeString(buf, v.AlarmDesc, Lengths.ALARM_LENGTH);
     }
 
     public TAlarm decode(ByteBuffer buf) {
         TAlarm v = new TAlarm();
         v.Id = buf.getInt();
         v.LSCID = buf.getInt();
+        v.NMAlarmID = Util.decodeString(buf, Lengths.DES_LENGTH);
         v.State = EnumState.fromValue(buf.getInt());
         v.AlarmDesc = Util.decodeString(buf, Lengths.ALARM_LENGTH);
         return v;
