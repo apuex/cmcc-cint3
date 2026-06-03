@@ -6,20 +6,20 @@
 
 	<groupId>com.github.apuex.cmcc-cint3</groupId>
 	<artifactId>cmcc-cint3-utility</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<packaging>jar</packaging>
 
 	<parent>
 		<groupId>com.github.apuex.cmcc-cint3</groupId>
 		<artifactId>cmcc-cint3</artifactId>
-		<version>0.0.2</version>
+		<version>0.0.3</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.github.apuex.cmcc-cint3</groupId>
 			<artifactId>cmcc-cint3-message</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-cli</groupId>
