@@ -16,6 +16,7 @@ public class ByteToCInt3MessageDecoder extends ByteToMessageDecoder {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+		seekMessageHeader(ctx, in);
 		if (in.readableBytes() < 8)
 			return; // frame header
 		byte[] array = new byte[in.readableBytes()];
@@ -23,7 +24,7 @@ public class ByteToCInt3MessageDecoder extends ByteToMessageDecoder {
 		ByteBuffer buf = ByteBuffer.wrap(array);
 		buf.order(ByteOrder.LITTLE_ENDIAN);
 		final int header = buf.getInt();
-		if (Message.MESSAGE_HEADER != header) { // message header error
+		if (Message.MESSAGE_HEADER != header) { // NOT Possible : message header error
 			System.out.printf("[%s] RCV : Message.MESSAGE_HEADER != 0x%04X\n", ctx.channel().remoteAddress(), header);
 			ctx.close();
 			return;
@@ -107,6 +108,20 @@ public class ByteToCInt3MessageDecoder extends ByteToMessageDecoder {
 			break;
 		}
 		in.skipBytes(buf.position());
+	}
+
+	private static void seekMessageHeader(ChannelHandlerContext ctx, ByteBuf in) {
+		while (in.readableBytes() > 4) {
+			long header = in.getUnsignedIntLE(0);
+			if(Message.MESSAGE_HEADER == header) {
+				break;
+			} else {
+				System.out.printf("[%s] RCV : Message.MESSAGE_HEADER != 0x%04X, skip 1 byte.\n"
+						, ctx.channel().remoteAddress()
+						, header);
+				in.skipBytes(1);
+			}
+		}
 	}
 
 	private static void logBytesReceived(ChannelHandlerContext ctx, byte[] array, int size) {
