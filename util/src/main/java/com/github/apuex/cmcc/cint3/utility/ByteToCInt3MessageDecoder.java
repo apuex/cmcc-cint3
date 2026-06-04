@@ -16,9 +16,12 @@ public class ByteToCInt3MessageDecoder extends ByteToMessageDecoder {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		seekMessageHeader(ctx, in);
+		while (do_decode(ctx, in, out));
+	}
+	private boolean do_decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+		seekMessageHeader(in);
 		if (in.readableBytes() < 8)
-			return; // frame header
+			return false; // frame header
 		byte[] array = new byte[in.readableBytes()];
 		in.getBytes(0, array, 0, array.length);
 		ByteBuffer buf = ByteBuffer.wrap(array);
@@ -27,12 +30,12 @@ public class ByteToCInt3MessageDecoder extends ByteToMessageDecoder {
 		if (Message.MESSAGE_HEADER != header) { // NOT Possible : message header error
 			System.out.printf("[%s] RCV : Message.MESSAGE_HEADER != 0x%04X\n", ctx.channel().remoteAddress(), header);
 			ctx.close();
-			return;
+			return false;
 		}
 
 		final int length = buf.getInt();
 		if (in.readableBytes() < length)
-			return; // frame header + length
+			return false; // frame header + length
 
 		logBytesReceived(ctx, array, length);
 
@@ -108,17 +111,15 @@ public class ByteToCInt3MessageDecoder extends ByteToMessageDecoder {
 			break;
 		}
 		in.skipBytes(buf.position());
+		return true;
 	}
 
-	private static void seekMessageHeader(ChannelHandlerContext ctx, ByteBuf in) {
-		while (in.readableBytes() > 4) {
-			long header = in.getUnsignedIntLE(0);
+	public static void seekMessageHeader(ByteBuf in) {
+		for(int i = in.readerIndex(); (in.readableBytes() >= 4 && i < in.readableBytes()); ++i) {
+			int header = in.getIntLE(i);
 			if(Message.MESSAGE_HEADER == header) {
-				break;
+				return;
 			} else {
-				System.out.printf("[%s] RCV : Message.MESSAGE_HEADER != 0x%04X, skip 1 byte.\n"
-						, ctx.channel().remoteAddress()
-						, header);
 				in.skipBytes(1);
 			}
 		}
