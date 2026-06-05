@@ -38,7 +38,7 @@ public class DynAccessHandler extends io.netty.channel.ChannelInboundHandlerAdap
 			case LOGIN:
 				break;
 			case LOGIN_ACK:
-				if(this.continuously) {
+				if(this.continuously && this.pollingInterval > 0) {
 					this.dynAccessTask = ctx.executor().scheduleWithFixedDelay(() -> {
 						sendDynAccess(ctx);
 					}, 0, this.pollingInterval, TimeUnit.SECONDS);
@@ -57,7 +57,9 @@ public class DynAccessHandler extends io.netty.channel.ChannelInboundHandlerAdap
 				if(!this.continuously) {
 					send(ctx, new Logout(SerialNo.nextSerialNo(ctx.channel())));
 				} else {
-					//sendDynAccess(ctx);
+					if(this.pollingInterval <= 0) {
+						sendDynAccess(ctx);
+					}
 				}
 				break;
 			case SET_ALARM_MODE:
