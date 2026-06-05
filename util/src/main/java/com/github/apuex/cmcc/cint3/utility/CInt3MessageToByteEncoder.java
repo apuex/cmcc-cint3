@@ -14,10 +14,11 @@ import java.nio.ByteOrder;
 
 public class CInt3MessageToByteEncoder extends MessageToByteEncoder<Message> {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(CInt3MessageToByteEncoder.class);
+	public final int MAX_MESSAGE_SIZE;
 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
-		byte[] array = new byte[64*1024];
+		byte[] array = new byte[MAX_MESSAGE_SIZE];
 		ByteBuffer buf = ByteBuffer.wrap(array);
 		buf.order(ByteOrder.LITTLE_ENDIAN);
 		switch(msg.PKType) {
@@ -100,7 +101,8 @@ public class CInt3MessageToByteEncoder extends MessageToByteEncoder<Message> {
 		logger.info(sb.toString());
 	}
 
-	public CInt3MessageToByteEncoder() {
+	public CInt3MessageToByteEncoder(int maxMessageSize) {
+		MAX_MESSAGE_SIZE = maxMessageSize;
 		AlarmModeAckCodec = new AlarmModeAckCodec();
 		DynAccessModeAckCodec = new DynAccessModeAckCodec();
 		HeartBeatAckCodec = new HeartBeatAckCodec();

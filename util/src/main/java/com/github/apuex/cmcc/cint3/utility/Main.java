@@ -68,6 +68,7 @@ public class Main {
 				put("server-new-passwd", "1234567890");
 				put("alarm-mode", "4");
 				put("dyn-access-mode", "0");
+				put("max-message-size", "131072");
 				put("polling-interval", "2");
 				put("node-id", "526336");
 				put("continuously", "false");
@@ -90,6 +91,7 @@ public class Main {
 		options.addOption(new Option(null, "server-new-passwd", true, "C Interface server password"));
 		options.addOption(new Option(null, "alarm-mode", true, "alarm mode"));
 		options.addOption(new Option(null, "dyn-access-mode", true, "dynamic access mode"));
+		options.addOption(new Option(null, "max-message-size", true, "maximum message size, in byte(s)"));
 		options.addOption(new Option("d", "node-id", true, "Node Id of data object"));
 		options.addOption(new Option("t", "polling-interval", true, "polling interval, in second(s)"));
 		options.addOption(new Option("c", "continuously", false, "send set dynamic access mode request continuously"));

@@ -16,13 +16,14 @@ public class SetPoint {
 		Bootstrap bootstrap = new Bootstrap();
 
 		try {
+			final int maxMessageSize = Integer.parseInt(params.getOrDefault("max-message-size", "131072"));
 			bootstrap.group(workerGroup).channel(NioSocketChannel.class)
 					.handler(new ChannelInitializer<SocketChannel>() {
 						@Override
 						public void initChannel(SocketChannel ch) throws Exception {
 							ch.pipeline()
-								.addLast(new ByteToCInt3MessageDecoder())
-								.addLast(new CInt3MessageToByteEncoder())
+								.addLast(new ByteToCInt3MessageDecoder(maxMessageSize))
+								.addLast(new CInt3MessageToByteEncoder(maxMessageSize))
 								.addLast(new SetPointHandler(params));
 						}
 					});

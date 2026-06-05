@@ -16,14 +16,15 @@ public class Server {
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
+			final int maxMessageSize = Integer.parseInt(params.getOrDefault("max-message-size", "131072"));
 			ServerBootstrap bootstrap = new ServerBootstrap();
 			bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
 					.childHandler(new ChannelInitializer<SocketChannel>() {
 						@Override
 						public void initChannel(SocketChannel ch) throws Exception {
 							ch.pipeline()
-								.addLast(new ByteToCInt3MessageDecoder())
-								.addLast(new CInt3MessageToByteEncoder())
+								.addLast(new ByteToCInt3MessageDecoder(maxMessageSize))
+								.addLast(new CInt3MessageToByteEncoder(maxMessageSize))
 								.addLast(new ServerHandler(params));
 						}
 					}).option(ChannelOption.SO_BACKLOG, 1024).option(ChannelOption.SO_REUSEADDR, true)
